@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["camelcase", "commitlint", "devtools", "stylelint"]
+  "cSpell.words": [
+    "camelcase",
+    "commitlint",
+    "devtools",
+    "htmlhintrc",
+    "stylelint",
+    "theworld"
+  ]
 }

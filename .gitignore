@@ -3,3 +3,6 @@ package-lock.json
 yarn.lock
 dist/
 .DS_Store
+.vscode/**/*
+!.vscode/settings.json
+!.vscode/extensions.json
