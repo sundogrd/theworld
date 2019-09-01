@@ -5,14 +5,12 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "jsx": "react",
     "paths": {
       "*": ["node_modules/*"],
-      "@/*": [
-        "src/*"
-      ],
-    }
+      "@/*": ["src/*"]
+    },
+    "types": ["node", "electron", "webpack-env"]
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }
