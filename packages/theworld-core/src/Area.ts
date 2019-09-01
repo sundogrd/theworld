@@ -22,7 +22,8 @@ import AreaFloor from './AreaFloor';
  * @extends GameEntity
  */
 class Area extends GameEntity {
-  constructor(bundle, name, manifest) {
+    name: any;
+  constructor(bundle: string, name: string, manifest) {
     super();
     this.bundle = bundle;
     this.name = name;

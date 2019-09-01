@@ -1,45 +1,35 @@
 import * as events from "events";
+import BehaviorManager from "@/BehaviorManager";
 
 const Logger = require('./Logger');
 const Scriptable = (parentClass: typeof events.EventEmitter) =>
 class extends parentClass {
     __pruned: any;
-    behaviors: Set<string>;
-  emit(name: string, ...args: any[]) {
-    // Squelch events on a pruned entity. Attempts to prevent the case where an entity has been effectively removed
-    // from the game but somehow still triggered a listener. Set by respective entity Manager class
-    if (this.__pruned) {
-      this.removeAllListeners();
-      return;
-    }
+    behaviors: Map<string, any>;
+    emit(name: string, ...args: any[]) {
+        // Squelch events on a pruned entity. Attempts to prevent the case where an entity has been effectively removed
+        // from the game but somehow still triggered a listener. Set by respective entity Manager class
+        if (this.__pruned) {
+            this.removeAllListeners();
+            return;
+        }
 
-    super.emit(name, ...args);
-  }
+        return super.emit(name, ...args);
+    }
     removeAllListeners() {
         throw new Error("Method not implemented.");
+        return this
     }
 
-  /**
-   * @param {string} name
-   * @return {boolean}
-   */
   hasBehavior(name: string): boolean {
     return this.behaviors.has(name);
   }
 
-  /**
-   * @param {string} name
-   * @return {*}
-   */
-  getBehavior(name) {
+  getBehavior(name: string): any {
     return this.behaviors.get(name);
   }
 
-  /**
-   * Attach this entity's behaviors from the manager
-   * @param {BehaviorManager} manager
-   */
-  setupBehaviors(manager) {
+  setupBehaviors(manager: BehaviorManager) {
     for (let [behaviorName, config] of this.behaviors) {
       let behavior = manager.get(behaviorName);
       if (!behavior) {

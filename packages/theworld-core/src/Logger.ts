@@ -1,6 +1,6 @@
 'use strict';
 
-import winston from 'winston';
+import * as winston from 'winston';
 
 const logExt = '.log';
 
@@ -29,7 +29,7 @@ class Logger {
     return Logger.winstonInstance.level || process.env.LOG_LEVEL || 'debug';
   }
 
-  static setLevel(level) {
+  static setLevel(level: string) {
     Logger.winstonInstance.level = level;
   }
 
@@ -64,7 +64,7 @@ class Logger {
   }
 
   //TODO: Be able to set and deactivate file logging via a server command.
-  static setFileLogging(path) {
+  static setFileLogging(path: string) {
     if (!path.endsWith(logExt)) {
       path += logExt;
     }

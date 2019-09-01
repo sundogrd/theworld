@@ -1,7 +1,9 @@
 'use strict';
 
+import * as events from "events";
 
-const Metadatable = (parentClass: FunctionConstructor) =>
+
+const Metadatable = (parentClass: typeof events.EventEmitter) =>
 
 class extends parentClass {
     metadata: any;
@@ -35,6 +37,7 @@ class extends parentClass {
   }
     emit(arg0: string, key: string, value: any, oldValue: any) {
         throw new Error("Method not implemented.");
+        return false
     }
   getMeta(key: string) {
     if (!this.metadata) {
@@ -46,4 +49,4 @@ class extends parentClass {
   }
 };
 
-module.exports = Metadatable;
+export default Metadatable
