@@ -4,8 +4,7 @@ import Area from "./Area";
 
 const uuid = require('uuid/v4');
 const Attributes = require('./Attributes');
-const Character = require('./Character');
-const Config = require('./Config');
+import Character from './Character'
 const Logger = require('./Logger');
 const Scriptable = require('./Scriptable');
 const CommandQueue = require('./CommandQueue');

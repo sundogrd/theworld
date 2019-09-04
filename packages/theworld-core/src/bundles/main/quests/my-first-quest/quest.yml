@@ -1,0 +1,52 @@
+---
+-
+  # Since this quest is id: journeybegins and is in area "some-area" its EntityReference will
+  # be "some-area:journeybegins"
+  id: journeybegins
+
+  # Quests have an optional level you can use for whatever you wish, the core
+  # does not use this for anything
+  level: 1
+
+  # if autoComplete is true the quest will trigger the complete event as soon
+  # all of its goals are fulfilled. Otherwise you will need a command such as
+  # the `quest complete` command (defined in the `bundle-example-quests` bundle)
+  autoComplete: true
+
+  # Description and title are not used by the core but should be used by your
+  # commands (such as `quest log` in the `bundle-example-quests` bundle) to display
+  # information to the user. title, description, and completionMessage may all
+  # contain color tags.
+  title: "A Journey Begins"
+  description: |-
+     - Use 'get sword chest' to get your first weapon
+
+  # There is also an optional completionMessage which, again, isn't used by the
+  # core but you can use it to display additional content after the quest is
+  # complete
+  completionMessage: |-
+    The rat looks like it is hungry, use '<white>quest list rat</white>' to see what aid you can offer. Use '<white>quest start rat 1</white>' to accept their task.
+
+  # Here is where we get to use the goals we defined above
+  goals:
+    -
+      # Quests may have multiple goals, each entry has a type which is the
+      # filename of the goal type we defined but with the `.js` removed.
+      type: FetchGoal
+
+      # Here is the configuration for the goal. Aside from `title` every goal
+      # will have its own configuration options so consult the goal type for its
+      # available options.
+      config:
+        title: Find a Weapon
+        count: 1
+        item: 'limbo:rustysword'
+
+  # Rewards are defined exactly like goals and you may have multiple rewards
+  # as well.
+  rewards:
+    -
+      type: ExperienceReward
+      config:
+        amount: 5
+        leveledTo: quest

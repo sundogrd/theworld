@@ -1,8 +1,10 @@
 'use strict';
 
-type InventoryData = {
-    items: Array<Item>,
-    max: number,
+import Item from "./item/Item";
+
+export type InventoryData = {
+    items?: Array<Item>,
+    max?: number,
 }
 
 /**
@@ -67,7 +69,7 @@ class Inventory extends Map {
     // Item is imported here to prevent circular dependency with Item having an Inventory
     const Item = require('./Item');
 
-    let data = {
+    const data = {
       items: [],
       max: this.maxSize
     };
@@ -103,7 +105,7 @@ class Inventory extends Map {
       }
 
       const area = state.AreaManager.getAreaByReference(def.entityReference);
-      let newItem = state.ItemFactory.create(area, def.entityReference);
+      const newItem = state.ItemFactory.create(area, def.entityReference);
       newItem.uuid = uuid;
       newItem.carriedBy = carriedBy;
       newItem.initializeInventory(def.inventory);

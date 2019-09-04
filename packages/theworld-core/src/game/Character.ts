@@ -1,5 +1,9 @@
 'use strict';
 
+import { Inventory, InventoryFullError, InventoryData } from "./Inventory";
+import Attributes from './Attributes'
+import Room from "./Room";
+
 const Attributes = require('./Attributes');
 const Config = require('./Config');
 const EffectList = require('./EffectList');
@@ -7,10 +11,14 @@ const { EquipSlotTakenError, EquipAlreadyEquippedError } = require('./EquipError
 const EventEmitter = require('events');
 const Heal = require('./Heal');
 const Metadatable = require('./Metadatable');
-const { Inventory, InventoryFullError } = require('./Inventory');
 
 type CharacterData = {
     name: string
+    inventory?: InventoryData
+    equipment: Map<string, any>
+    level?: number
+    room?: Room
+    attributes?: Attributes
 }
 
 /**
@@ -28,6 +36,20 @@ type CharacterData = {
  * @mixes Metadatable
  */
 class Character extends Metadatable(EventEmitter) {
+  name: string;
+  inventory: Inventory;
+  equipment: any;
+  combatants: Set<unknown>;
+  combatData: {};
+  level: any;
+  room: any;
+  attributes: any;
+  followers: Set<unknown>;
+  following: any;
+  party: any;
+  effects: any;
+  metadata: any;
+  __hydrated: boolean;
   constructor(data: CharacterData) {
     super();
 

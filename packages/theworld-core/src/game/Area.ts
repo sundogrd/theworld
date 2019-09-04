@@ -2,6 +2,16 @@
 
 import GameEntity from './GameEntity';
 import AreaFloor from './AreaFloor';
+import Room from './Room';
+
+type Manifest = {
+  title: string
+  metadata?: {
+    [key: string]: any
+  },
+  script?: string, // script identify
+  behaviors?: Map<string, any>
+}
 
 /**
  * Representation of an in game area
@@ -22,11 +32,20 @@ import AreaFloor from './AreaFloor';
  * @extends GameEntity
  */
 class Area extends GameEntity {
-    name: any;
-  constructor(bundle: string, name: string, manifest) {
+  id: string;
+  // mod的概念
+  bundle: string;
+  // 显示的title
+  title: any;
+  metadata: any;
+  rooms: Map<any, any>;
+  npcs: Set<unknown>;
+  map: Map<any, any>;
+  script: any;
+  constructor(bundle: string, id: string, manifest: Manifest) {
     super();
     this.bundle = bundle;
-    this.name = name;
+    this.id = id;
     this.title = manifest.title;
     this.metadata = manifest.metadata || {};
     this.rooms = new Map();
@@ -45,7 +64,7 @@ class Area extends GameEntity {
    * @return {string}
    */
   get areaPath() {
-    return `${this.bundle}/areas/${this.name}`;
+    return `${this.bundle}/areas/${this.id}`;
   }
 
   /**
@@ -61,7 +80,7 @@ class Area extends GameEntity {
    * @param {string} id Room id
    * @return {Room|undefined}
    */
-  getRoomById(id) {
+  getRoomById(id: string) {
     return this.rooms.get(id);
   }
 
@@ -69,7 +88,7 @@ class Area extends GameEntity {
    * @param {Room} room
    * @fires Area#roomAdded
    */
-  addRoom(room) {
+  addRoom(room: Room) {
     this.rooms.set(room.id, room);
 
     if (room.coordinates) {
@@ -87,7 +106,7 @@ class Area extends GameEntity {
    * @param {Room} room
    * @fires Area#roomRemoved
    */
-  removeRoom(room) {
+  removeRoom(room: Room) {
     this.rooms.delete(room.id);
 
     /**
@@ -101,7 +120,7 @@ class Area extends GameEntity {
    * @param {Room} room
    * @throws Error
    */
-  addRoomToMap(room) {
+  addRoomToMap(room: Room) {
     if (!room.coordinates) {
       throw new Error('Room does not have coordinates');
     }

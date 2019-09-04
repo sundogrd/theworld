@@ -1,4 +1,4 @@
-import EventManager from "@/EventManager";
+import EventManager from "@/game/EventManager";
 
 /**
  * BehaviorManager keeps a map of BehaviorName:EventManager which is used

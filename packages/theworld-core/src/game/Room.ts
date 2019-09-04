@@ -3,6 +3,21 @@
 import GameEntity from './GameEntity'
 import Logger from './Logger'
 import Area from './Area';
+import Character from './Character';
+
+type RoomData = {
+  items: Array<{id: number}>
+  npcs: Array<{id: number}>
+  metadata: any
+  script: string
+  coordinates: {x: number, y: number, z: number}
+  behaviors: any
+  description: string
+  exits: Array<{id: number, direction: string}>
+  id: number;
+  title: string;
+  doors: Object;
+}
 
 /**
  * @property {Area}          area         Area room is in
@@ -40,9 +55,9 @@ class Room extends GameEntity {
     defaultDoors: any;
     items: Set<any>;
     npcs: Set<any>;
-    players: Set<any>;
+    players: Set<Character>;
     spawnedNpcs: Set<any>;
-  constructor(area: Area, def: any) {
+  constructor(area: Area, def: RoomData) {
     super();
     const required = ['title', 'description', 'id'];
     for (const prop of required) {
@@ -58,10 +73,10 @@ class Room extends GameEntity {
     this.metadata = def.metadata || {};
     this.script = def.script;
     this.behaviors = new Map(Object.entries(def.behaviors || {}));
-    this.coordinates = Array.isArray(def.coordinates) && def.coordinates.length === 3 ? {
-      x: def.coordinates[0],
-      y: def.coordinates[1],
-      z: def.coordinates[2],
+    this.coordinates = def.coordinates ? {
+      x: def.coordinates.x,
+      y: def.coordinates.y,
+      z: def.coordinates.z,
     } : null;
     this.description = def.description;
     this.entityReference = this.area.name + ':' + def.id;
@@ -90,7 +105,7 @@ class Room extends GameEntity {
    * @param {...*} args
    * @return {void}
    */
-  emit(eventName, ...args) {
+  emit(eventName: string, ...args: any[]) {
     const result = super.emit(eventName, ...args);
 
     const proxiedEvents = [
@@ -112,14 +127,14 @@ class Room extends GameEntity {
   /**
    * @param {Player} player
    */
-  addPlayer(player) {
+  addPlayer(player: Character) {
     this.players.add(player);
   }
 
   /**
    * @param {Player} player
    */
-  removePlayer(player) {
+  removePlayer(player: Character) {
     this.players.delete(player);
   }
 
@@ -136,7 +151,7 @@ class Room extends GameEntity {
    * @param {Npc} npc
    * @param {boolean} removeSpawn
    */
-  removeNpc(npc, removeSpawn = false) {
+  removeNpc(npc: Character, removeSpawn = false) {
     this.npcs.delete(npc);
     if (removeSpawn) {
       this.spawnedNpcs.delete(npc);

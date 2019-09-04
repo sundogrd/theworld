@@ -1,5 +1,5 @@
 import * as events from "events";
-import BehaviorManager from "@/BehaviorManager";
+import BehaviorManager from "@/game/BehaviorManager";
 
 const Logger = require('./Logger');
 const Scriptable = (parentClass: typeof events.EventEmitter) =>
