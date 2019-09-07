@@ -10,9 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "events": "^3.0.0",
+    "nedb": "^1.8.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@types/nedb": "^1.8.9",
     "@types/node": "^12.7.3"
   }
 }

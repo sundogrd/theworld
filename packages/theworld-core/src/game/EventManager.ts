@@ -24,7 +24,7 @@ class EventManager {
      */
     add(eventName: string, listener: Function) {
         if (!this.events.has(eventName)) {
-        this.events.set(eventName, new Set());
+            this.events.set(eventName, new Set());
         }
         this.events.get(eventName).add(listener);
     }
@@ -34,19 +34,19 @@ class EventManager {
      * @param {EventEmitter} emitter
      * @param {Object} config
      */
-    attach(emitter: EventEmitter, config: Record<string, any>) {
+    attach(emitter: EventEmitter, config?: Record<string, any>) {
         for (const [ event, listeners ] of this.events) {
             for (const listener of listeners) {
                 if (config) {
-                emitter.on(event, listener.bind(emitter, config));
+                    emitter.on(event, listener.bind(emitter, config));
                 } else {
-                emitter.on(event, listener.bind(emitter));
+                    emitter.on(event, listener.bind(emitter));
                 }
             }
         }
     }
 
-  /**
+    /**
    * Remove all listeners for a given emitter or only those for the given events
    * If no events are given it will remove all listeners from all events defined
    * in this manager.
@@ -57,19 +57,19 @@ class EventManager {
    * @param {EventEmitter}  emitter
    * @param {?string|iterable} events Optional name or list of event names to remove listeners from
    */
-  detach(emitter: EventEmitter, events?: string | Iterable<string>) {
-    if (typeof events === 'string') {
-      events = [events];
-    } else if (!events) {
-      events = this.events.keys();
-    } else if (!isIterable(events)) {
-      throw new TypeError('events list passed to detach() is not iterable');
-    }
+    detach(emitter: EventEmitter, events?: string | Iterable<string>) {
+        if (typeof events === 'string') {
+            events = [events];
+        } else if (!events) {
+            events = this.events.keys();
+        } else if (!isIterable(events)) {
+            throw new TypeError('events list passed to detach() is not iterable');
+        }
 
-    for (const event of events) {
-      emitter.removeAllListeners(event);
+        for (const event of events) {
+            emitter.removeAllListeners(event);
+        }
     }
-  }
 }
 
 export default EventManager

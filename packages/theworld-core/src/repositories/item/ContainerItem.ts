@@ -1,23 +1,24 @@
-import Item, { ItemData } from './Item'
-import GameEntity from '../GameEntity';
-import { Inventory } from '../Inventory';
-
-type ContainerItemData = {
-    maxItems: number;
-} & ItemData
+import Item from "./Item";
+import { ItemDoc, InventoryDoc } from "../docs";
+import Inventory from "./Inventory";
 
 class ContainerItem extends Item {
-    lockedBy: GameEntity
+    lockedBy: string;
     closeable: boolean;
     closed: boolean;
     locked: boolean;
     maxItems: number;
-    inventory: Inventory;
-    constructor(item: ContainerItemData) {
-        super(item)
-        this.maxItems    = item.maxItems || Infinity;
+    inventory: Inventory; // inventory
+    constructor(itemDoc: ItemDoc) {
+        super(itemDoc)
+        this.maxItems = itemDoc.maxItems || Infinity;
 
-        this.initializeInventory(this.maxItems);
+        if(itemDoc.inventory) {
+            this.inventory = new Inventory(itemDoc.inventory)
+        } else {
+            this.initializeInventory(this.maxItems);
+        }
+
     }
     /**
    * Open a container-like object
@@ -74,7 +75,6 @@ class ContainerItem extends Item {
     }
 
     addItem(item: Item): void {
-        this._setupInventory();
         this.inventory.addItem(item);
         item.carriedBy = this.id;
     }
@@ -85,17 +85,7 @@ class ContainerItem extends Item {
     }
 
     isInventoryFull(): boolean {
-        this._setupInventory();
         return this.inventory.isFull;
-    }
-
-    _setupInventory(): void {
-        if (!this.inventory) {
-            this.inventory = new Inventory({
-                items: [],
-                max: this.maxItems
-            });
-        }
     }
 }
 

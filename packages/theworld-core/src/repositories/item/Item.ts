@@ -1,29 +1,5 @@
-'use strict';
-
-import GameEntity from '../GameEntity'
-
-enum EItemType {
-    OBJECT = 'object',
-    CONTAINER = 'container',
-    ARMOR = 'armor',
-    WEAPON = 'weapon',
-    POTION = 'potion',
-    RESOURCE = 'resource',
-}
-
-export type ItemData = {
-    keywords: Array<string>;
-    name: string;
-    id: string;
-    metadata?: any;
-    behaviors?: any;
-    description?: string;
-    entityReference: string;
-    isEquipped: boolean;
-    type: EItemType;
-    script?: string
-}
-
+import GameEntity from "@/game/GameEntity";
+import { ItemDoc, EItemType } from "../docs";
 
 /**
  * @property {object}  metadata    Essentially a blob of whatever attrs the item designer wanted to add
@@ -44,7 +20,7 @@ export type ItemData = {
 class Item extends GameEntity {
     metadata: any;
     description: string;
-    entityReference: string; // factory id
+    template: string; // template id
     id: string;
     isEquipped: boolean;
     keywords: string[];
@@ -54,31 +30,31 @@ class Item extends GameEntity {
     closeable: boolean;
     carriedBy: string; // id
     equippedBy: string; // id
-    constructor (item: ItemData) {
+    constructor (itemDoc: ItemDoc) {
         super();
         const validate = ['keywords', 'name', 'id'];
 
         for (const prop of validate) {
-            if (!(prop in item)) {
+            if (!(prop in itemDoc)) {
                 throw new ReferenceError(`Item missing required property [${prop}]`);
             }
         }
 
-        this.metadata  = item.metadata || {};
-        this.behaviors = new Map(Object.entries(item.behaviors || {}));
-        this.description = item.description || 'Nothing special.';
-        this.entityReference = item.entityReference; // EntityFactory key
-        this.id          = item.id;
-        this.isEquipped  = item.isEquipped || false;
-        this.keywords    = item.keywords;
-        this.name        = item.name;
-        this.script      = item.script || null;
+        this.metadata  = itemDoc.metadata || {};
+        this.behaviors = new Map(Object.entries(itemDoc.behaviors || {}));
+        this.description = itemDoc.description || 'Nothing special.';
+        this.template = itemDoc.template; // template key
+        this.id          = itemDoc.id;
+        this.isEquipped  = itemDoc.isEquipped || false;
+        this.keywords    = itemDoc.keywords;
+        this.name        = itemDoc.name;
+        this.script      = itemDoc.script || null;
 
-        this.type = item.type || EItemType.OBJECT;
+        this.type = itemDoc.type || EItemType.OBJECT;
 
         this.closeable   = false;
 
-        this.carriedBy = null;
+        this.carriedBy = itemDoc.carriedBy || null;
         this.equippedBy = null;
     }
 

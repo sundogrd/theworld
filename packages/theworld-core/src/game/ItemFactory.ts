@@ -21,7 +21,7 @@ class ItemFactory extends EntityFactory {
    * @param {string} entityRef
    * @return {Item}
    */
-    create(area, entityRef) {
+    create(entityRef) {
         const item = this.createByType(area, entityRef, Item);
         item.area = area;
         return item;
