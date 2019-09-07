@@ -1,6 +1,6 @@
 'use strict';
 
-import Character from "./Character";
+import Character from "../repositories/creature/Character";
 
 /**
  * Self-managing list of effects for a target

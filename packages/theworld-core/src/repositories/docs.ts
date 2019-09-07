@@ -15,10 +15,10 @@ export enum EItemType {
 }
 
 export type ItemDoc = {
+    id: string;
     keywords: Array<string>;
     name: string;
-    id: string;
-    metadata?: any;
+    metadata?: Object;
     behaviors?: any;
     description?: string;
     template: string; // template id
@@ -35,4 +35,27 @@ export type ItemDoc = {
     closed?: boolean;
     locked?: boolean;
     inventory?: InventoryDoc;
+}
+
+
+export type CreatureDoc = {
+    id: string;
+    name: string;
+    inventory: InventoryDoc;
+    // equipment: any;
+    // combatants: Set<string>; // creature ids
+    // combatData: {};
+    level: number;
+    position: {
+        room: string, // room id
+        x: number,
+        y: number,
+        z: number,
+    };
+    attributes: any;
+    followers: Set<string>; // creature ids
+    following: string;  // creature id
+    party: string;           // party id
+    // effects: any;
+    metadata: Object;
 }

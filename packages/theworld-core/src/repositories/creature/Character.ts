@@ -1,8 +1,8 @@
 'use strict';
 
-import { Inventory, InventoryFullError, InventoryData } from "./Inventory";
-import Attributes from './Attributes'
-import Room from "./Room";
+import { Inventory, InventoryFullError, InventoryData } from "../../game/Inventory";
+import Attributes from '../../game/Attributes'
+import Room from "../../game/Room";
 
 const Attributes = require('./Attributes');
 const Config = require('./Config');

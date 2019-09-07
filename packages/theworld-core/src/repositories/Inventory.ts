@@ -1,5 +1,5 @@
-import { InventoryDoc } from "../docs";
-import Item from "./Item";
+import { InventoryDoc } from "./docs";
+import Item from "./item/Item";
 
 /**
  * @extends Error

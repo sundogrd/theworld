@@ -1,6 +1,6 @@
 import Item from "./Item";
 import { ItemDoc, InventoryDoc } from "../docs";
-import Inventory from "./Inventory";
+import Inventory from "../Inventory";
 
 class ContainerItem extends Item {
     lockedBy: string;

@@ -35,10 +35,10 @@ class extends parentClass {
     */
     this.emit('metadataUpdated', key, value, oldValue);
   }
-    emit(arg0: string, key: string, value: any, oldValue: any) {
-        throw new Error("Method not implemented.");
-        return false
-    }
+  emit(arg0: string, key?: string, value?: any, oldValue?: any) {
+      throw new Error("Method not implemented.");
+      return false
+  }
   getMeta(key: string) {
     if (!this.metadata) {
       throw new Error('Class does not have metadata property');
