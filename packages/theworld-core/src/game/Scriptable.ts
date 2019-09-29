@@ -4,7 +4,7 @@ import BehaviorManager from "@/game/BehaviorManager";
 const Logger = require('./Logger');
 const Scriptable = (parentClass: typeof events.EventEmitter) =>
 class extends parentClass {
-    __pruned: any;
+    __pruned: boolean;
     behaviors: Map<string, any>;
     emit(name: string, ...args: any[]) {
         // Squelch events on a pruned entity. Attempts to prevent the case where an entity has been effectively removed

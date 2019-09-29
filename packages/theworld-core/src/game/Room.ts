@@ -3,7 +3,7 @@
 import GameEntity from './GameEntity'
 import Logger from './Logger'
 import Area from './Area';
-import Character from './Character';
+import Character from '../repositories/creature/Character';
 
 type RoomData = {
   items: Array<{id: number}>
