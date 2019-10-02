@@ -6,8 +6,27 @@ Action主要用于定义Character的行为，Action具有Target而且是可选�
 type Action = {
     id: string;
     name: string;
-    timeSpend: (world: World, me: Creature, target?: Item | Creature) => number;
+    timeSpend: (world?: World, me?: Creature, target?: Item | Creature) => number;
     check: (world: World, me: Creature, target?: Item | Creature) => boolean;
     do: (world: World, me: Creature, target?: Item | Creature) => Array<WorldUpdate> | null;
 }
+```
+
+## 内置Action
+### turnWest
+```Typescript
+const turnNorth = {
+    id: "turnNorth",
+    name: "${turnNorth}" // for i18n
+    timeSpend: () => 1
+    check: () => true
+    do: () => {
+        return [{
+            position: {
+                direction: "north";
+            },
+        }]
+    }
+}
+export default turnLeft
 ```
