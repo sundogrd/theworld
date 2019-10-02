@@ -39,6 +39,7 @@ type CreatureDoc = {
         [bodyPart: string]: string | null;
     },
     templateId: string;
+    state: string; // 保留，智能状态机 state machine
     position: {
         areaId: string;
         x: number;
@@ -51,7 +52,12 @@ type CreatureDoc = {
     attributes: {
         [attributeKey]: Attribute;
     },
-    active: (world: World, player: Creature, me: Creature) => void
+    isAlive: boolean, // false if the creature is dead. :)
+    think: (world: World, player: Creature, me: Creature) => {
+        actionId: string;
+        target: null | Creature | Item | Tile;
+    },
+    nextTurn: number; // 下一个行动的时间
     meta: {
         [metaKey]: any;
     }
