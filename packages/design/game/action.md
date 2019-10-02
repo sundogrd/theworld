@@ -22,9 +22,12 @@ const turnNorth = {
     check: () => true
     do: () => {
         return [{
-            position: {
-                direction: "north";
-            },
+            type: "creature-change",
+            payload: {
+                position: {
+                    direction: "north";
+                },
+            }
         }]
     }
 }
