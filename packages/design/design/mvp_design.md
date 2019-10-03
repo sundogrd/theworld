@@ -30,7 +30,7 @@ interface World {
 ```
 
 ### Game
-对于theworld框架中的游戏部分，有几个基本概念[time时间机制](../game/time.md)，[地图机制](../game/map-mechanism.md)，[creature]](../game/creature.md)，[item]](../game/item.md)，[action]](../game/action.md)。
+对于theworld框架中的游戏部分，有几个基本概念[time时间机制](../game/time.md)，[地图机制](../game/map-mechanism.md)，[creature](../game/creature.md)，[item](../game/item.md)，[action]](../game/action.md)。
 
 同时需要了解的是框架中关于[GameWorld](../game/game-world.md)以及[Bundle](../game/bundle.md)的概念
 
