@@ -1,6 +1,6 @@
 type ItemTemplateDoc = {
     id: string;
-    name: string; // like rat_template
+    name: string; // like sword_template
     createScript: string
 }
 
