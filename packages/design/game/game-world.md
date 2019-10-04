@@ -1,15 +1,15 @@
-# World
-world是theworld框架中最为核心的对象，
+# GameWorld
+GameWorld是theworld框架中游戏逻辑最为核心的对象，
 
 ## Top-Level API
 ```Typescript
-interface World {
+interface GameWorld {
     getArea: (areaId: string) => Area
     getItem: (itemId: string) => Item
     getCreature: (creatureId: string) => Creature
-    // 时间前进，调用各种onTimeUpdate，包括Director的。
-    timeRun: () => void
-    // applyWorldUpdates是事务的，有一个异常则回滚全部
+    // 时间前进，回合制得执行所有creature，area，item的逻辑，调用各种onTimeUpdate。
+    run: () => void
+    // applyWorldUpdates用于更新整个游戏世界状态的API，是事务的，有一个异常则回滚全部
     applyWorldUpdates: (result: WorldUpdate) => void
 }
 
@@ -130,3 +130,12 @@ type AreaChangeUpdate = {
 
 ## UpdateMiddleware
 暂无
+
+
+## GameWorld的运行机制
+GameWorld中run方法主要流程图如下
+![game-world-run](game-world-run.png)
+
+
+## GameWorld的状态更新
+GameWorld的数据持久化的存储在文件中，项目底层使用nedb作为数据库管理工具用来做数据的检索以及存储。对外只暴露applyWorldUpdates
