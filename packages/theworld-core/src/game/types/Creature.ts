@@ -1,18 +1,7 @@
 import GameWorld from "../GameWorld"
-import Item from "./item"
+import Item from "./Item"
 import { Tile } from "./docs/AreaDoc"
-
-enum ECreatureGender {
-    FEMALE = 'female',
-    MALE = 'male',
-}
-
-type EDirection = {
-    WEST: 'west',
-    EAST: 'east',
-    NORTH: 'north',
-    SOUTH: 'south',
-}
+import { EDirection, ECreatureGender } from "./common"
 
 // type SkillStatus = {
 //     level: number;
@@ -28,11 +17,13 @@ type Creature = {
     race: string;
     inventory: {
         maxItem: number;
-        itemIds: Array<string>;
+        items: {
+            [itemId: string]: Item;
+        }
     },
     equipment: {
         // bodyPart' value is item id
-        [bodyPart: string]: string | null;
+        [bodyPart: string]: Item | null;
     },
     templateId: string;
     state: string; // 保留，智能状态机 state machine

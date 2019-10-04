@@ -1,4 +1,4 @@
-import Item from "./item"
+import Item from "./Item"
 import GameWorld from "../GameWorld"
 
 enum EItemCreateSource {

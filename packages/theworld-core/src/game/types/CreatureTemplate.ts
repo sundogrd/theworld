@@ -1,4 +1,4 @@
-import Creature from "./item"
+import Creature from "./Item"
 import GameWorld from "../GameWorld"
 
 enum ECreatureCreateSource {

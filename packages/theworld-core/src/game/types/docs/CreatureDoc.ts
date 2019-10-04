@@ -1,3 +1,5 @@
+import { ECreatureGender, EDirection } from "../common"
+
 type InventoryDoc = {
     maxItem: number;
     itemIds: Array<string>;
@@ -13,7 +15,7 @@ type CreatureDoc = {
     id: string;
     name: string;
     description: string;
-    gender: string;
+    gender: ECreatureGender;
     race: string;
     inventory: InventoryDoc;
     equipment: {
@@ -26,7 +28,7 @@ type CreatureDoc = {
         areaId: string;
         x: number;
         y: number;
-        direction: string;
+        direction: EDirection;
     },
     // skills: {
     //     [skillId]: SkillStatus;
