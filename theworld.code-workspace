@@ -126,6 +126,7 @@
       "Metadatable",
       "Scriptable",
       "editorconfig",
+      "equipable",
       "npcs",
       "superset"
     ]
