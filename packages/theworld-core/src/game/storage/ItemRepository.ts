@@ -40,9 +40,9 @@ class ItemRepository {
         })
     }
 
-    updateItem(query: any, update: any): Promise<{numAffected: number, affectedDocuments: any, upsert: boolean}> {
+    updateItem(query: any, update: any): Promise<{numAffected: number, affectedDocuments: any}> {
         return new Promise((resolve, reject): void => {
-            this.store.update(query, update, { returnUpdatedDocs: true },function(err: Error, numberOfUpdated: number, affectedDocuments: any, upsert: boolean) {
+            this.store.update(query, update, { returnUpdatedDocs: true, upsert: false },function(err: Error, numberOfUpdated: number, affectedDocuments: any) {
                 // numRemoved = 1
                 if(err) {
                     reject(err)
@@ -50,7 +50,6 @@ class ItemRepository {
                 resolve({
                     numAffected: numberOfUpdated,
                     affectedDocuments: affectedDocuments,
-                    upsert: upsert,
                 })
             });
         })
