@@ -21,7 +21,13 @@ type AreaDoc = {
     creatures: Array<string>
     items: Array<string>,
     // where developer register logic into this place.
-    areaManagers: Array<string>,
+    areaManagers: Array<{
+        id: string,
+        onTimeUpdateScript: string,
+        onCreatureLeaveScript: string,
+        onCreatureDeadScript: string,
+        onIdleScript: string
+    }>,
     meta: {
         [metaKey: string]: any;
     },

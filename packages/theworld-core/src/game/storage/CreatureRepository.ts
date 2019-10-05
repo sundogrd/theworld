@@ -36,6 +36,21 @@ class CreatureRepository {
         })
     }
 
+    mgetCreatureByIds(ids: Array<string>): Promise<{[creatureId: string]: CreatureDoc}> {
+        return new Promise((resolve, reject): void => {
+            this.store.find({ id: { $in: ids }}, function(err: Error, docs: Array<CreatureDoc>) {
+                if(err) {
+                    reject(err)
+                    return
+                }
+                resolve(docs.reduce((prev, curr) => {
+                    prev[curr.id] = curr
+                    return prev
+                }, {} as {[creatureId: string]: CreatureDoc}))
+            })
+        })
+    }
+
     updateCreature(query: any, update: any): Promise<{numAffected: number, affectedDocuments: any}> {
         return new Promise((resolve, reject): void => {
             this.store.update(query, update, { returnUpdatedDocs: true, upsert: false },function(err: Error, numberOfUpdated: number, affectedDocuments: any) {

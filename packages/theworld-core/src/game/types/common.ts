@@ -1,8 +1,8 @@
-export type EDirection = {
-    WEST: 'west',
-    EAST: 'east',
-    NORTH: 'north',
-    SOUTH: 'south',
+export enum EDirection {
+    WEST = 'west',
+    EAST = 'east',
+    NORTH = 'north',
+    SOUTH = 'south',
 }
 
 export enum ECreatureGender {

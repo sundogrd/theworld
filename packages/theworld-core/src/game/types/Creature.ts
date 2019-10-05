@@ -43,7 +43,7 @@ type Creature = {
     think: (world: GameWorld, player: Creature, me: Creature) => {
         actionId: string;
         target: null | Creature | Item | Tile;
-    },
+    } | null,
     nextTurn: number; // 下一个行动的时间
     meta: {
         [metaKey: string]: any;

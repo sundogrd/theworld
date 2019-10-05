@@ -12,9 +12,9 @@ class CreatureTemplateRepository {
         this.store = store
     }
 
-    addCreatureTemplate(itemDoc: CreatureTemplateDoc): Promise<void> {
+    addCreatureTemplate(creatureDoc: CreatureTemplateDoc): Promise<void> {
         return new Promise((resolve, reject): void => {
-            this.store.insert(itemDoc, function(err: Error, _doc: CreatureTemplateDoc) {
+            this.store.insert(creatureDoc, function(err: Error, _doc: CreatureTemplateDoc) {
                 if(err) {
                     reject(err)
                     return

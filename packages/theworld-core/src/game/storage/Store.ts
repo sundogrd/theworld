@@ -2,12 +2,14 @@ import ItemRepository from "./ItemRepository";
 import ItemTemplateRepository from "./ItemTemplateRepository";
 import Item from "../types/Item";
 import ItemTemplate, { ItemTemplateCreateSource } from "../types/ItemTemplate";
-import GameWorld from "../GameWorld";
+import GameWorld, { GameWorldUpdate } from "../GameWorld";
 import CreatureRepository from "./CreatureRepository";
 import CreatureTemplateRepository from "./CreatureTemplateRepository";
 import AreaRepository from "./AreaRepository";
 import Creature from "../types/Creature";
 import { Tile } from "../types/docs/AreaDoc";
+import CreatureTemplate, { CreatureTemplateCreateSource } from "../types/CreatureTemplate";
+import Area from "../types/Area";
 
 type StoreOptions = {
     itemRepository: ItemRepository,
@@ -16,6 +18,18 @@ type StoreOptions = {
     creatureTemplateRepository: CreatureTemplateRepository,
     areaRepository: AreaRepository,
 }
+
+// only support function(), haven't supported arrow function yet
+export function parseFunction (functionStr: string): Function | null {
+    const funcReg = /function *\(([^()]*)\)[ \n\t]*{(.*)}/gmi;
+    const match = funcReg.exec(functionStr.replace(/\n/g, ' '));
+
+    if(match) {
+        return new Function(...match[1].split(','), match[2]);
+    }
+
+    return null;
+};
 
 /**
  * store for game
@@ -96,12 +110,43 @@ class Store {
             // },
             attributes: attributes,
             isAlive: creatureDoc.isAlive, // false if the creature is dead. :)
-            think: new Function(creatureDoc.thinkScript) as (world: GameWorld, player: Creature, me: Creature) => {
+            think: parseFunction(creatureDoc.thinkScript) as (world: GameWorld, player: Creature, me: Creature) => {
                 actionId: string;
                 target: null | Creature | Item | Tile;
-            },
+            } | null,
             nextTurn: creatureDoc.nextTurn, // 下一个行动的时间
             meta: creatureDoc.meta,
+        }
+    }
+
+    async getCreatureTemplate(templateId: string): Promise<CreatureTemplate> {
+        const templateDoc = await this.creatureTemplateRepository.getCreatureTemplateById(templateId)
+        return {
+            id: templateDoc.id,
+            name: templateDoc.name,
+            create: parseFunction(templateDoc.createScript) as (world: GameWorld, source: CreatureTemplateCreateSource) => Creature,
+        }
+    }
+
+    async getArea(areaId: string): Promise<Area> {
+        const areaDoc = await this.areaRepository.getAreaById(areaId)
+        const areaCreatures = await this.creatureRepository.mgetCreatureByIds(areaDoc.creatures)
+        const areaItems = await this.itemRepository.mgetItemByIds(areaDoc.items)
+        return {
+            id: areaDoc.id,
+            name: areaDoc.name,
+            map: areaDoc.map,
+            creatures: areaCreatures,
+            items: areaItems,
+            // where developer register logic into this place.
+            areaManagers: areaDoc.areaManagers.map(areaDocManager => ({
+                id: areaDocManager.id,
+                onTimeUpdate: parseFunction(areaDocManager.onTimeUpdateScript) as (world: GameWorld, area: Area) => Array<GameWorldUpdate> | null,
+                onCreatureLeave: parseFunction(areaDocManager.onCreatureLeaveScript) as (world: GameWorld, creature: Creature, target: Area) => Array<GameWorldUpdate> | null,
+                onCreatureDead: parseFunction(areaDocManager.onCreatureDeadScript) as (world: GameWorld, creature: Creature) => Array<GameWorldUpdate> | null,
+                onIdle: parseFunction(areaDocManager.onIdleScript) as (world: GameWorld, creature: Creature) => Array<GameWorldUpdate> | null,
+            })),
+            meta: areaDoc.meta,
         }
     }
 }

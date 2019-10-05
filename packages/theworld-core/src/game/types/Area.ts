@@ -1,18 +1,19 @@
 import { Tile } from "./docs/AreaDoc"
 import Creature from "./Creature"
 import GameWorld, { GameWorldUpdate } from "../GameWorld"
-import Item from "./Item"
+import CreatureDoc from "./docs/CreatureDoc"
+import ItemDoc from "./docs/ItemDoc"
 
 type AreaManager = {
     id: string,
     // trigger only when player is in this area
     onTimeUpdate: (world: GameWorld, area: Area) => Array<GameWorldUpdate> | null,
     // trigger only when player is in this area
-    onCreatureLeave: (world: GameWorld, creature: Creature, target: Area) => void,
+    onCreatureLeave: (world: GameWorld, creature: Creature, target: Area) => Array<GameWorldUpdate> | null,
     // trigger only when player is in this area
-    onCreatureDead: (world: GameWorld, creature: Creature) => void,
+    onCreatureDead: (world: GameWorld, creature: Creature) => Array<GameWorldUpdate> | null,
     // trigger when player is **not** in thie area, for Evolution of the area
-    onIdle: (world: GameWorld, creature: Creature) => void,
+    onIdle: (world: GameWorld, creature: Creature) => Array<GameWorldUpdate> | null,
 }
 
 type Area = {
@@ -20,10 +21,10 @@ type Area = {
     name: string,
     map: Array<Array<Tile | null>>,
     creatures: {
-        [creatureId: string]: Creature,
+        [creatureId: string]: CreatureDoc,
     },
     items: {
-        [itemId: string]: Item,
+        [itemId: string]: ItemDoc,
     },
     // where developer register logic into this place.
     areaManagers: Array<AreaManager>,
