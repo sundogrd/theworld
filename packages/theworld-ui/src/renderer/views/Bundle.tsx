@@ -1,20 +1,19 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import '../style/views/bundle.less';
+import Nav from '../components/Nav';
+// import '../../types/store';
+import { observer, inject } from 'mobx-react';
+import BundleStore from '@/renderer/store/bundleStore';
 const { useEffect, useState } = React;
-import '../style/bundle.less';
 
-type Bundle = {
-    name: string;
-    description: string;
-    dependencies: string[];
-};
 
 function BundleItem({
     bundle,
     onBundleSelect,
     onBundlePick,
 }: {
-    bundle: Bundle;
+    bundle: IBundle;
     onBundlePick: (event: any) => void;
     onBundleSelect: (event: any) => void;
 }) {
@@ -40,41 +39,14 @@ function BundleItem({
     );
 }
 
-export default function Bundle() {
-    const bundles: Bundle[] = [
-        {
-            name: 'SuperBundle',
-            description: 'The bundle use to do something like super man',
-            dependencies: ['PowerBundle', 'ManBundle'],
-        },
-        {
-            name: 'DoubiBundle',
-            description: 'The bundle just for fun',
-            dependencies: ['FantasyBundle'],
-        },
-    ];
-
-    const [curBundle, setCurBundle] = useState(bundles[0]);
-    const [pickedBundles, setPickedBundles] = useState([]);
-    const addPickedBundle = (bundle: Bundle, addOrDelete: boolean) => {
-        if (addOrDelete) {
-            pickedBundles.push(bundle);
-        } else {
-            const idx = pickedBundles.findIndex(
-                (b: Bundle) => b.name === bundle.name,
-            );
-            console.log('idx is ', idx);
-            pickedBundles.splice(idx, 1);
-        }
-        console.log(pickedBundles);
-        setPickedBundles([...pickedBundles]);
-    };
+function BundleComp({bundleStore}: {bundleStore: BundleStore}) {
+    const {totalBundles, pickedBundles, curBundle} = bundleStore;
+    const {pickBundle, selectBundle} = bundleStore;
+    const bundles: IBundle[] = totalBundles;
 
     return (
         <div className="bundle-view">
-            <div className="bundle-nav">
-                <Link to="/home">返回</Link>
-            </div>
+            <Nav />
             <div className="bundle-body">
                 <div className="bundle-side">
                     <ul>
@@ -82,10 +54,10 @@ export default function Bundle() {
                             <BundleItem
                                 key={idx}
                                 onBundlePick={step =>
-                                    addPickedBundle(bundles[idx], step > 0)
+                                    bundleStore.pickBundle(bundles[idx], step > 0)
                                 }
                                 onBundleSelect={() =>
-                                    setCurBundle(bundles[idx])
+                                    bundleStore.selectBundle(bundles[idx])
                                 }
                                 bundle={bundle}
                             />
@@ -93,26 +65,34 @@ export default function Bundle() {
                     </ul>
                 </div>
                 <div className="bundle-info">
-                    <div className="info-title">{curBundle.name}</div>
-                    <div className="info-desc">{curBundle.description}</div>
+                    <div className="info-title">{bundleStore.curBundle.name}</div>
+                    <div className="info-desc">{bundleStore.curBundle.description}</div>
                     <div className="info-deps">
                         <span>Dependencies:</span>
                         <ul>
-                            {curBundle.dependencies.map((dep, idx) => (
+                            {bundleStore.curBundle.dependencies.map((dep, idx) => (
                                 <li key={idx}>{dep}</li>
                             ))}
                         </ul>
                     </div>
                 </div>
             </div>
-            <div>
-                You total picked {pickedBundles.length} bundles:
-                <ul>
-                    {pickedBundles.map((b, i) => (
-                        <p key={i}>{b.name}</p>
-                    ))}
-                </ul>
+            <div className="bundle-footer">
+                <div>
+                    You total picked {bundleStore.pickedBundles.length} bundles:
+                    <ul>
+                        {bundleStore.pickedBundles.map((b, i) => (
+                            <p key={i}>{b.name}</p>
+                        ))}
+                    </ul>
+                </div>
+                <Link to="/game">进入游戏</Link>
             </div>
         </div>
     );
 }
+
+
+
+
+export default inject('bundleStore')(observer(BundleComp));

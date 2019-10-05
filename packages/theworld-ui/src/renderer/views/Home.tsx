@@ -1,5 +1,5 @@
 import * as React from 'react';
-import '../style/home.less';
+import '../style/views/home.less';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
