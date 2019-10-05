@@ -18,7 +18,6 @@ function createMainWindow() {
             nodeIntegration: true,
         },
     });
-
     // Set url for `win`
     // points to `webpack-dev-server` in development
     // points to `index.html` in production

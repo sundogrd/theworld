@@ -42,18 +42,18 @@ module.exports = merge(
                         },
                         {
                             loader: 'css-loader',
-                            options: {
-                                minimize: {
-                                    autoprefixer: {
-                                        add: true,
-                                        browsers: [
-                                            'FireFox > 1',
-                                            'Chrome > 1',
-                                            'ie >= 8',
-                                        ],
-                                    },
-                                },
-                            },
+                            // options: {
+                            // minimize: {
+                            //     autoprefixer: {
+                            //         add: true,
+                            //         browsers: [
+                            //             'FireFox > 1',
+                            //             'Chrome > 1',
+                            //             'ie >= 8',
+                            //         ],
+                            //     },
+                            // },
+                            // },
                         },
                         {
                             loader: 'less-loader',
