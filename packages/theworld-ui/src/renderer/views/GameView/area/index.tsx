@@ -15,7 +15,7 @@ function isCreatureInTile(creature: Creature, tile: Tile): boolean {
     return false;
 }
 
-const AreaComp = observer(() => {
+const Area = observer(() => {
     const { gameStore } = useStores();
     const { area, player } = gameStore;
     const { map } = area;
@@ -39,4 +39,4 @@ const AreaComp = observer(() => {
     );
 });
 
-export default AreaComp;
+export default Area;

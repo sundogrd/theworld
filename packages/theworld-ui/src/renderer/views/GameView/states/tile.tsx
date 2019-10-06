@@ -10,7 +10,7 @@ function getPlayerTile(player: Creature, area: Area): Tile {
     return area.map[y][x];
 }
 
-const TileStateComp = observer(() => {
+const TileStateDisplayer = observer(() => {
     const { gameStore } = useStores();
     const { player, area } = gameStore;
     const tile = getPlayerTile(player, area);
@@ -22,4 +22,4 @@ const TileStateComp = observer(() => {
     );
 });
 
-export default TileStateComp;
+export default TileStateDisplayer;

@@ -3,10 +3,10 @@ import Nav from '../../components/Nav';
 import { observer } from 'mobx-react';
 import './index.less';
 import useStores from '../../hooks/useStores';
-import CArea from './area/index';
-import CActions from './actions/index';
-import CPlayerState from './states/player';
-import CTileState from './states/tile';
+import Area from './area/index';
+import Actions from './actions/index';
+import PlayerStateDisplayer from './states/player';
+import TileStateDisplayer from './states/tile';
 
 const GameView = observer(() => {
     const { gameStore } = useStores();
@@ -14,16 +14,16 @@ const GameView = observer(() => {
         <div className="game-view">
             <Nav to="/bundle" />
             <div className="non-action">
-                <CArea />
+                <Area />
                 <div className="states-wrapper">
-                    <CPlayerState />
-                    <CTileState />
+                    <PlayerStateDisplayer />
+                    <TileStateDisplayer />
                 </div>
             </div>
             <div className="action">
                 <div className="actions"></div>
                 <div className="move-ops">
-                    <CActions />
+                    <Actions />
                 </div>
             </div>
         </div>

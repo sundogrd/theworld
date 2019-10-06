@@ -29,7 +29,7 @@ const directions = [
     ],
 ];
 
-const TileComp = observer(() => {
+const Actions = observer(() => {
     const { gameStore } = useStores();
 
     return (
@@ -51,4 +51,4 @@ const TileComp = observer(() => {
     );
 });
 
-export default TileComp;
+export default Actions;

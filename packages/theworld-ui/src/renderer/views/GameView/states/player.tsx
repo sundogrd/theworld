@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 // import './index.less';
 import useStores from '../../../hooks/useStores';
 
-const PlayerStateComp = observer(() => {
+const PlayerStateDisplayer = observer(() => {
     const { gameStore } = useStores();
     const { player } = gameStore;
     const attributes = Object.keys(player.attributes);
@@ -21,4 +21,4 @@ const PlayerStateComp = observer(() => {
     );
 });
 
-export default PlayerStateComp;
+export default PlayerStateDisplayer;
