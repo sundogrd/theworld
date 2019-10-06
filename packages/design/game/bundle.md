@@ -90,6 +90,7 @@ module.exports = {
 ```Javascript
 const Bundle = require("theworld-core").Bundle
 const keyboard = Bundle.createItem(Bundle.getItemTemplate("keyboard"))
+const macbook = Bundle.createItem(Bundle.getItemTemplate("macbook"))
 
 module.exports = {
     id: "lwio", // one of the author's nickname
@@ -100,7 +101,7 @@ module.exports = {
     inventory: {
         maxItem: 50,
         items: {
-            [itemId: string]: Item,
+            [macbook.id]: macbook,
         }
     },
     equipment: {
