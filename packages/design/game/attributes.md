@@ -33,7 +33,7 @@ const manaAttribute = {
     //      Then your formula function would receive:
     //        function (character, mana, foo, bar, baz)
     //      Each is the value, after effects/formulas, of that attribute
-    fn: function (character, mana, intellect) {
+    fn: (me: Creature, currentValue: number, dependencies: { [dependency: string]: number }) => {
       // Using the example formula from before:
       return Math.floor(
         mana +

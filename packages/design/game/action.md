@@ -16,8 +16,8 @@ type Action = {
 ### turnWest
 ```Typescript
 const turnNorth = {
-    id: "turnNorth",
-    name: "${turnNorth}" // for i18n
+    id: "turn-north",
+    name: "${turn-north}" // for i18n
     timeSpend: () => 1
     check: () => true
     do: () => {
