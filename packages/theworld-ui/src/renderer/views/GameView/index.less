@@ -1,0 +1,35 @@
+.game-view {
+  display: flex;
+  flex-direction: column;
+  padding: 0 40px;
+
+  .non-action {
+    display: flex;
+    margin-top: 50px;
+    justify-content: space-around;
+    align-items: flex-start;
+  }
+  .states-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    & > div {
+      width: 200px;
+      min-height: 100px;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+
+      p {
+        margin: 10px;
+      }
+    }
+    .player-states {
+      border: 1px solid black;
+    }
+
+    .tile-states {
+      border: 1px solid black;
+    }
+  }
+}

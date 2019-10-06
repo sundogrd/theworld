@@ -1,9 +1,9 @@
-const gameStore = () => ({
-    value: 2,
-    addValue() {
-        this.value = this.value + 1;
-        console.log(this.value)
-    }
-})
+import areaStore from './areaStore';
+import playerStore from './playerStore';
 
-export default gameStore
+const gameStore = () => ({
+    area: areaStore(),
+    player: playerStore(),
+});
+
+export default gameStore;

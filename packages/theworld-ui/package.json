@@ -6,6 +6,8 @@
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "start": "npm run build && electron ./dist/main.js",
     "lint-staged": "lint-staged",
+    "style-lint": "stylelint \"./**/*.less\" --config stylelint.config.js  --syntax less",
+    "style-lint-fix": "stylelint \"./**/*.less\" --config stylelint.config.js  --syntax less --fix",
     "dev": "concurrently -k \"yarn run server\" \"wait-on http://localhost:3000 && yarn run dev-start\"",
     "webpack-dev": "webpack --mode development --config ./webpack.config.dev.js",
     "build": "webpack --mode production --config ./webpack.config.prod.js",

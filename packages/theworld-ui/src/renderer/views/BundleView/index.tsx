@@ -4,12 +4,11 @@ import Nav from '../../components/Nav';
 
 import { observer } from 'mobx-react';
 
-import "./index.less"
+import './index.less';
 import BundleItem from './BundleItem';
 import { useLocalStore } from 'mobx-react';
 
-type BundleViewProps = {
-}
+type BundleViewProps = {};
 
 const totalBundles = [
     {
@@ -18,7 +17,7 @@ const totalBundles = [
         dependencies: ['PowerBundle', 'ManBundle'],
     },
     {
-        name: 'DoubiBundle',
+        name: 'DoubBundle',
         description: 'The bundle just for fun',
         dependencies: ['FantasyBundle'],
     },
@@ -34,25 +33,20 @@ const BundleView: React.FunctionComponent<BundleViewProps> = observer(() => {
             description: 'The bundle use to do something like super man',
             dependencies: ['PowerBundle', 'ManBundle'],
         },
-        pickBundle(bundle: IBundle, addOrDelete: boolean) {
+        pickBundle(bundle: Bundle, addOrDelete: boolean) {
             if (addOrDelete) {
                 this.pickedBundles.push(bundle);
             } else {
                 const idx = this.pickedBundles.findIndex(
-                    (b: IBundle) => b.name === bundle.name,
+                    (b: Bundle) => b.name === bundle.name,
                 );
                 this.pickedBundles.splice(idx, 1);
             }
-            console.log(this);
         },
-        selectBundle(bundle: IBundle) {
-            this.curBundle = {...bundle};
-            console.log(this.curBundle)
-        }
-    }))
-    // const {totalBundles, pickedBundles, curBundle} = bundleStore;
-    // const {pickBundle, selectBundle} = bundleStore;
-    // const bundles: IBundle[] = totalBundles;
+        selectBundle(bundle: Bundle) {
+            this.curBundle = { ...bundle };
+        },
+    }));
 
     return (
         <div className="bundle-view">
@@ -60,29 +54,42 @@ const BundleView: React.FunctionComponent<BundleViewProps> = observer(() => {
             <div className="bundle-body">
                 <div className="bundle-side">
                     <ul>
-                        {bundleStore.totalBundles.map((bundle: IBundle, idx: number) => (
-                            <BundleItem
-                                key={idx}
-                                onBundlePick={step =>
-                                    bundleStore.pickBundle(bundleStore.totalBundles[idx], step > 0)
-                                }
-                                onBundleSelect={() =>
-                                    bundleStore.selectBundle(bundleStore.totalBundles[idx])
-                                }
-                                bundle={bundle}
-                            />
-                        ))}
+                        {bundleStore.totalBundles.map(
+                            (bundle: Bundle, idx: number) => (
+                                <BundleItem
+                                    key={idx}
+                                    onBundlePick={step =>
+                                        bundleStore.pickBundle(
+                                            bundleStore.totalBundles[idx],
+                                            step > 0,
+                                        )
+                                    }
+                                    onBundleSelect={() =>
+                                        bundleStore.selectBundle(
+                                            bundleStore.totalBundles[idx],
+                                        )
+                                    }
+                                    bundle={bundle}
+                                />
+                            ),
+                        )}
                     </ul>
                 </div>
                 <div className="bundle-info">
-                    <div className="info-title">{bundleStore.curBundle.name}</div>
-                    <div className="info-desc">{bundleStore.curBundle.description}</div>
+                    <div className="info-title">
+                        {bundleStore.curBundle.name}
+                    </div>
+                    <div className="info-desc">
+                        {bundleStore.curBundle.description}
+                    </div>
                     <div className="info-deps">
                         <span>Dependencies:</span>
                         <ul>
-                            {bundleStore.curBundle.dependencies.map((dep: any, idx: number) => (
-                                <li key={idx}>{dep}</li>
-                            ))}
+                            {bundleStore.curBundle.dependencies.map(
+                                (dep: any, idx: number) => (
+                                    <li key={idx}>{dep}</li>
+                                ),
+                            )}
                         </ul>
                     </div>
                 </div>
@@ -100,9 +107,6 @@ const BundleView: React.FunctionComponent<BundleViewProps> = observer(() => {
             </div>
         </div>
     );
-})
-
-
-
+});
 
 export default BundleView;

@@ -1,10 +1,10 @@
-import * as React from "react";
+import * as React from 'react';
 
 type BundleItemProps = {
-    bundle: IBundle;
+    bundle: Bundle;
     onBundleSelect: React.EventHandler<React.MouseEvent>;
     onBundlePick: (order: number) => void;
-}
+};
 const BundleItem: React.FunctionComponent<BundleItemProps> = ({
     bundle,
     onBundleSelect,
@@ -30,6 +30,6 @@ const BundleItem: React.FunctionComponent<BundleItemProps> = ({
             <input checked={checked} onChange={handleChange} type="checkbox" />
         </div>
     );
-}
+};
 
-export default BundleItem
+export default BundleItem;
