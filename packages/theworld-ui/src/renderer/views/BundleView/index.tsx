@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 
 import "./index.less"
 import BundleItem from './BundleItem';
-import { useLocalStore } from 'mobx-react-lite';
+import { useLocalStore } from 'mobx-react';
 
 type BundleViewProps = {
 }

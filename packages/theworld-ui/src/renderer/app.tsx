@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import './style/app.less';
 import {Provider, observer} from 'mobx-react';
 import { createStore } from './store/index';
-import { useLocalStore } from 'mobx-react-lite';
+import { useLocalStore } from 'mobx-react';
 
 // import DevTools, {configureDevtool} from 'mobx-react-devtools';
 // configureDevtool({

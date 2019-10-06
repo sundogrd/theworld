@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Nav from '../components/Nav';
 // import { observer, inject } from 'mobx-react';
-import { observer, useObservable } from 'mobx-react-lite'
+import { observer } from 'mobx-react'
 
 import '../style/views/game.less';
 // import GameStore from '@/renderer/store/gameStore';
