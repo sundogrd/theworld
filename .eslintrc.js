@@ -14,7 +14,7 @@ module.exports = {
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         camelcase: 'off',
         '@typescript-eslint/indent': ["error", 4],
-        "class-methods-use-this": ["error", { "exceptMethods": [] }]
+        "class-methods-use-this": ["error", { "exceptMethods": [] }],
     },
     parserOptions: {
         parser: '@typescript-eslint/parser',
