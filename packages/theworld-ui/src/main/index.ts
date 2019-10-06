@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import installExtension, {
     REACT_DEVELOPER_TOOLS,
+    MOBX_DEVTOOLS,
 } from 'electron-devtools-installer';
 
 const isDevelopment = process.env.ELECTRON_DEV == 'dev';
@@ -45,6 +46,12 @@ function createMainWindow() {
     });
 
     installExtension(REACT_DEVELOPER_TOOLS)
+        .then((name: any) => console.log(`[DEBUG]添加插件：${name}`))
+        .catch((err: Error) =>
+            console.log(`[DEBUG]添加插件${name}错误：`, err),
+        );
+
+      installExtension(MOBX_DEVTOOLS)
         .then((name: any) => console.log(`[DEBUG]添加插件：${name}`))
         .catch((err: Error) =>
             console.log(`[DEBUG]添加插件${name}错误：`, err),

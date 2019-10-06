@@ -22,6 +22,9 @@ const main = {
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js', '.json'],
+        alias: {
+            '@/types': path.resolve(__dirname, './src/types'),
+        },
     },
 
     module: {

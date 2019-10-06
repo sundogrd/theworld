@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Home from '../views/Home';
-import Game from '../views/Game';
-import Bundle from '../views/Bundle';
-import Records from '../views/Records';
+import Home from '../views/HomeView';
+import Game from '../views/GameView';
+import Bundle from '../views/BundleView';
+import Records from '../views/RecordsView';
 import { Route, Redirect } from 'react-router-dom';
 
 export const routes = [
