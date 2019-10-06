@@ -1,14 +1,9 @@
-import { observable, action } from 'mobx'
-
-
-class GameStore {
-    @observable value: number = 2
-
-    @action
-    addValue = () => {
+const gameStore = () => ({
+    value: 2,
+    addValue() {
         this.value = this.value + 1;
         console.log(this.value)
     }
-}
+})
 
-export default GameStore
+export default gameStore

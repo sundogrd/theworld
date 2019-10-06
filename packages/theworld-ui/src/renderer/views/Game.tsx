@@ -1,9 +1,12 @@
 import * as React from 'react';
 import Nav from '../components/Nav';
-import { observer, inject } from 'mobx-react';
+// import { observer, inject } from 'mobx-react';
+import { observer, useObservable } from 'mobx-react-lite'
 
 import '../style/views/game.less';
-import GameStore from '@/renderer/store/gameStore';
+// import GameStore from '@/renderer/store/gameStore';
+import useStores from '../hooks/useStores';
+
 
 // function GameComp({gameStore}: {gameStore: GameStore}) {
 //     console.log(gameStore.addValue)
@@ -16,27 +19,20 @@ import GameStore from '@/renderer/store/gameStore';
 //     )
 // }
 
-@inject('gameStore')
-@observer
-class GameComp extends React.Component<{gameStore: GameStore}> {
+const GameComp = observer(() => {
+    const { gameStore } = useStores()
 
-    handleClick() {
-        this.props.gameStore.addValue();
+    const handleClick = () => {
+        gameStore.addValue();
     }
-
-    render() {
-        const gameStore = this.props.gameStore;
-        console.log(gameStore);
-        return (
-            <div className="game-view">
-                <Nav to="/bundle"/>
-                value is :{gameStore.value}
-                <button onClick={this.handleClick.bind(this)}></button>
-            </div> 
-        )
-    }
-}
+    console.log(gameStore);
+    return (
+        <div className="game-view">
+            <Nav to="/bundle"/>
+          value is :{gameStore.value}
+            <button onClick={handleClick}></button>
+        </div>
+    )
+})
 
 export default GameComp
-
-// export default inject('gameStore')(observer(GameComp));

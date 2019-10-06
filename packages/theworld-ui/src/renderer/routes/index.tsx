@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Home from '../views/Home';
 import Game from '../views/Game';
-import Bundle from '../views/Bundle';
+import Bundle from '../views/BundleView';
 import Records from '../views/Records';
 import { Route, Redirect } from 'react-router-dom';
 
