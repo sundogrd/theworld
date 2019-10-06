@@ -1,13 +1,10 @@
-import BundleStore from './bundleStore';
-import GameStore from './gameStore';
+import gameStore from './gameStore';
 
-class Store {
-    bundleStore: BundleStore
-    gameStore: GameStore
-    constructor() {
-        this.bundleStore = new BundleStore();
-        this.gameStore = new GameStore();
+export function createStore() {
+    // note the use of this which refers to observable instance of the store
+    return {
+        gameStore: gameStore(),
     }
 }
 
-export default new Store();
+export type TStore = ReturnType<typeof createStore>
