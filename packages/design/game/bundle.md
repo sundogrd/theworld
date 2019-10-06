@@ -251,3 +251,8 @@ module.exports = {
   "good-adjective": "good",
 }
 ```
+
+## 加载顺序
+attribute > itemTemplate > creatureTemplate > item > creature
+
+> 其余的比如i18n以及action由于对其他的不影响，就不在这列出来细节了，不影响。
