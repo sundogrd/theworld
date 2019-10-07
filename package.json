@@ -15,7 +15,8 @@
   "workspaces": {
     "packages": [
       "packages/theworld-core",
-      "packages/theworld-ui"
+      "packages/theworld-ui",
+      "packages/fantasy-base-bundle"
     ]
   }
 }
