@@ -1,5 +1,5 @@
-import { InventoryDoc } from "./docs";
-import Item from "./item/Item";
+import { InventoryDoc } from './docs';
+import Item from './item/Item';
 
 /**
  * @extends Error
@@ -13,15 +13,15 @@ export class InventoryFullError extends Error {}
 class Inventory extends Array {
     maxSize: number;
     /**
-   * @param {object} init
-   * @param {Array<Item>} init.items
-   * @param {number} init.max Max number of items this inventory can hold
-   */
+     * @param {object} init
+     * @param {Array<Item>} init.items
+     * @param {number} init.max Max number of items this inventory can hold
+     */
     constructor(doc?: InventoryDoc) {
-        super()
+        super();
         this.maxSize = doc.maxItems;
-        for(const itemId of doc.itemIds) {
-            this.push(itemId)
+        for (const itemId of doc.itemIds) {
+            this.push(itemId);
         }
     }
 
@@ -34,19 +34,19 @@ class Inventory extends Array {
     }
 
     get size(): number {
-        return this.length
+        return this.length;
     }
 
     /**
-   * @return {boolean}
-   */
+     * @return {boolean}
+     */
     get isFull(): boolean {
         return this.size >= this.maxSize;
     }
 
     /**
-   * @param {Item} item
-   */
+     * @param {Item} item
+     */
     addItem(item: Item): void {
         if (this.isFull) {
             throw new InventoryFullError();
@@ -55,12 +55,14 @@ class Inventory extends Array {
     }
 
     /**
-   * @param {Item} item
-   */
+     * @param {Item} item
+     */
     removeItem(item: Item): void {
-        const itemIndex = this.findIndex((itemId: string) => itemId === item.id)
-        this.splice(itemIndex, 1)
+        const itemIndex = this.findIndex(
+            (itemId: string) => itemId === item.id,
+        );
+        this.splice(itemIndex, 1);
     }
 }
 
-export default Inventory
+export default Inventory;

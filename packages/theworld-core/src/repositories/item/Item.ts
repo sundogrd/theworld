@@ -1,5 +1,5 @@
-import GameEntity from "@/game/GameEntity";
-import { ItemDoc, EItemType } from "../docs";
+import GameEntity from '@/game/GameEntity';
+import { ItemDoc, EItemType } from '../docs';
 
 /**
  * @property {object}  metadata    Essentially a blob of whatever attrs the item designer wanted to add
@@ -30,29 +30,31 @@ class Item extends GameEntity {
     closeable: boolean;
     carriedBy: string; // id
     equippedBy: string; // id
-    constructor (itemDoc: ItemDoc) {
+    constructor(itemDoc: ItemDoc) {
         super();
         const validate = ['keywords', 'name', 'id'];
 
         for (const prop of validate) {
             if (!(prop in itemDoc)) {
-                throw new ReferenceError(`Item missing required property [${prop}]`);
+                throw new ReferenceError(
+                    `Item missing required property [${prop}]`,
+                );
             }
         }
 
-        this.metadata  = itemDoc.metadata || {};
+        this.metadata = itemDoc.metadata || {};
         this.behaviors = new Map(Object.entries(itemDoc.behaviors || {}));
         this.description = itemDoc.description || 'Nothing special.';
         this.template = itemDoc.template; // template key
-        this.id          = itemDoc.id;
-        this.isEquipped  = itemDoc.isEquipped || false;
-        this.keywords    = itemDoc.keywords;
-        this.name        = itemDoc.name;
-        this.script      = itemDoc.script || null;
+        this.id = itemDoc.id;
+        this.isEquipped = itemDoc.isEquipped || false;
+        this.keywords = itemDoc.keywords;
+        this.name = itemDoc.name;
+        this.script = itemDoc.script || null;
 
         this.type = itemDoc.type || EItemType.OBJECT;
 
-        this.closeable   = false;
+        this.closeable = false;
 
         this.carriedBy = itemDoc.carriedBy || null;
         this.equippedBy = null;
@@ -63,4 +65,4 @@ class Item extends GameEntity {
     }
 }
 
-export default Item
+export default Item;

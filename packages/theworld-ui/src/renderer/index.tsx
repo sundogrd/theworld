@@ -18,10 +18,10 @@ const root = document.getElementById('app');
 
 ReactDOM.render(
     <div>
-    <AppContainer>
-        <App />
-    </AppContainer>
-    {/* <DevTools /> */}
+        <AppContainer>
+            <App />
+        </AppContainer>
+        {/* <DevTools /> */}
     </div>,
     root,
 );

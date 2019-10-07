@@ -1,8 +1,7 @@
-
 export type InventoryDoc = {
-    maxItems: number
-    itemIds: Array<string> // array of item id
-}
+    maxItems: number;
+    itemIds: Array<string>; // array of item id
+};
 
 // Item
 export enum EItemType {
@@ -18,25 +17,24 @@ export type ItemDoc = {
     id: string;
     keywords: Array<string>;
     name: string;
-    metadata?: Object;
+    metadata?: Record<string, any>;
     behaviors?: any;
     description?: string;
     template: string; // template id
     isEquipped: boolean;
     type: EItemType;
     carriedBy?: string; // entity id
-    script?: string
+    script?: string;
     equippedBy?: string; // entity id
 
     // container
-    maxItems?: number
+    maxItems?: number;
     lockedBy?: string;
     closeable?: boolean;
     closed?: boolean;
     locked?: boolean;
     inventory?: InventoryDoc;
-}
-
+};
 
 export type CreatureDoc = {
     id: string;
@@ -47,15 +45,15 @@ export type CreatureDoc = {
     // combatData: {};
     level: number;
     position: {
-        room: string, // room id
-        x: number,
-        y: number,
-        z: number,
+        room: string; // room id
+        x: number;
+        y: number;
+        z: number;
     };
     attributes: any;
     followers: Set<string>; // creature ids
-    following: string;  // creature id
-    party: string;           // party id
+    following: string; // creature id
+    party: string; // party id
     // effects: any;
-    metadata: Object;
-}
+    metadata: Record<string, any>;
+};

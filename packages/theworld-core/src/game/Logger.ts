@@ -19,11 +19,9 @@ class Logger {
             //
             //   new winston.transports.File({ filename: 'error.log', level: 'error' }),
             //   new winston.transports.File({ filename: 'combined.log' })
-            new winston.transports.Console({
-
-            })
-        ]
-    })
+            new winston.transports.Console({}),
+        ],
+    });
 
     static getLevel() {
         return Logger.winstonInstance.level || process.env.LOG_LEVEL || 'debug';
@@ -68,11 +66,13 @@ class Logger {
         if (!path.endsWith(logExt)) {
             path += logExt;
         }
-        console.log("Adding file logging at " + path);
-        Logger.winstonInstance.add(new winston.transports.File({
-            filename: path,
-        // timestamp: true
-        }))
+        console.log('Adding file logging at ' + path);
+        Logger.winstonInstance.add(
+            new winston.transports.File({
+                filename: path,
+                // timestamp: true
+            }),
+        );
     }
 
     static deactivateFileLogging() {
@@ -80,11 +80,10 @@ class Logger {
     }
 
     static enablePrettyErrors() {
-    // const longjohn = require('longjohn');
+        // const longjohn = require('longjohn');
         const pe = require('pretty-error').start();
         pe.skipNodeFiles(); // Ignore native node files in stacktrace.
     }
-
 }
 
-export default Logger
+export default Logger;

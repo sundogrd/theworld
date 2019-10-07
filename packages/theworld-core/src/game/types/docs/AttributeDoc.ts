@@ -1,14 +1,13 @@
 type AttributeDoc = {
-    name: string,
+    name: string;
     // To make an attribute computed you add the 'formula' config with the
     // 'requires' and 'fn' properties
     formula: {
-
         // 'requires' specifies which attributes the formula depends on for its
         // calculation. You may depend on attributes defined in a different bundle.
-        requires: Array<string>,
+        requires: Array<string>;
 
-        metadata: any,
+        metadata: any;
 
         // 'fn' is the formula function. The function will automatically receive
         // as arguments:
@@ -20,8 +19,8 @@ type AttributeDoc = {
         //      Then your formula function would receive:
         //        function (character, mana, foo, bar, baz)
         //      Each is the value, after effects/formulas, of that attribute
-        fnScript: string
-    }
-}
+        fnScript: string;
+    };
+};
 
-export default AttributeDoc
+export default AttributeDoc;
