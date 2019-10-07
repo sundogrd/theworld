@@ -1,4 +1,6 @@
 type AttributeDoc = {
+    key: string;
+    // template available
     name: string;
     // To make an attribute computed you add the 'formula' config with the
     // 'requires' and 'fn' properties
