@@ -1,34 +1,38 @@
 import CreatureRepository from '../CreatureRepository';
 import * as Datastore from 'nedb';
-import * as path from 'path'
+import * as path from 'path';
 import { ECreatureGender, EDirection } from '../../types/common';
 
-describe('Creature',  () => {
+describe('Creature', () => {
     let creatureRepository: CreatureRepository | null = null;
-    const db = new Datastore({ filename: path.resolve('./packages/theworld-core/test/simple-creature.db'), autoload: true });
+    const db = new Datastore({
+        filename: path.resolve(
+            './packages/theworld-core/test/simple-creature.db',
+        ),
+        autoload: true,
+    });
     beforeEach(() => {
         creatureRepository = new CreatureRepository(db);
     });
 
     describe('#init db', () => {
         it('should update base value', () => {
-            console.log(db)
+            console.log(db);
             creatureRepository.addCreature({
-                id: "lwio",
-                name: "lwio",
-                description: "one of the founders of sundog",
+                id: 'lwio',
+                name: 'lwio',
+                description: 'one of the founders of sundog',
                 gender: ECreatureGender.MALE,
-                race: "human",
+                race: 'human',
                 inventory: {
                     maxItem: 100,
-                    itemIds: []
+                    itemIds: [],
                 },
-                equipment: {
-                },
-                templateId: "lwio-template",
-                state: "unknown", // 保留，智能状态机 state machine
+                equipment: {},
+                templateId: 'lwio-template',
+                state: 'unknown', // 保留，智能状态机 state machine
                 position: {
-                    areaId: "death-land",
+                    areaId: 'death-land',
                     x: 0,
                     y: 0,
                     direction: EDirection.EAST,
@@ -36,15 +40,12 @@ describe('Creature',  () => {
                 // skills: {
                 //     [skillId]: SkillStatus;
                 // },
-                attributes: {
-                },
+                attributes: {},
                 isAlive: true, // false if the creature is dead. :)
-                thinkScript: "",
+                thinkScript: '',
                 nextTurn: 0, // 下一个行动的时间
-                meta: {
-
-                }
-            })
+                meta: {},
+            });
         });
     });
 });

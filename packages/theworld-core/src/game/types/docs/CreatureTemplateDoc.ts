@@ -1,7 +1,7 @@
 type CreatureTemplateDoc = {
     id: string;
     name: string; // like rat_template
-    createScript: string
-}
+    createScript: string;
+};
 
-export default CreatureTemplateDoc
+export default CreatureTemplateDoc;

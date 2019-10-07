@@ -1,6 +1,6 @@
-import Item from "./Item";
-import { ItemDoc, InventoryDoc } from "../docs";
-import Inventory from "../Inventory";
+import Item from './Item';
+import { ItemDoc, InventoryDoc } from '../docs';
+import Inventory from '../Inventory';
 
 class ContainerItem extends Item {
     lockedBy: string;
@@ -10,19 +10,18 @@ class ContainerItem extends Item {
     maxItems: number;
     inventory: Inventory; // inventory
     constructor(itemDoc: ItemDoc) {
-        super(itemDoc)
+        super(itemDoc);
         this.maxItems = itemDoc.maxItems || Infinity;
 
-        if(itemDoc.inventory) {
-            this.inventory = new Inventory(itemDoc.inventory)
+        if (itemDoc.inventory) {
+            this.inventory = new Inventory(itemDoc.inventory);
         } else {
             this.initializeInventory(this.maxItems);
         }
-
     }
     /**
-   * Open a container-like object
-   */
+     * Open a container-like object
+     */
     open(): void {
         if (!this.closed) {
             return;
@@ -32,8 +31,8 @@ class ContainerItem extends Item {
     }
 
     /**
-   * Close a container-like object
-   */
+     * Close a container-like object
+     */
     close(): void {
         if (this.closed || !this.closeable) {
             return;
@@ -43,8 +42,8 @@ class ContainerItem extends Item {
     }
 
     /**
-   * Lock a container-like object
-   */
+     * Lock a container-like object
+     */
     lock(): void {
         if (this.locked || !this.closeable) {
             return;
@@ -55,8 +54,8 @@ class ContainerItem extends Item {
     }
 
     /**
-   * Unlock a container-like object
-   */
+     * Unlock a container-like object
+     */
     unlock(): void {
         if (!this.locked) {
             return;
@@ -89,5 +88,4 @@ class ContainerItem extends Item {
     }
 }
 
-
-export default ContainerItem
+export default ContainerItem;
