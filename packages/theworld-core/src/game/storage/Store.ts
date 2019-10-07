@@ -158,6 +158,57 @@ class Store {
         };
     }
 
+
+    async getAllAreas(): Promise<Area[]> {
+        const areaDocs = await this.areaRepository.getAllAreas();
+
+        const results = await Promise.all(areaDocs.map(async areaDoc => {
+            const areaCreatures = await this.creatureRepository.mgetCreatureByIds(
+                areaDoc.creatures,
+            );
+            const areaItems = await this.itemRepository.mgetItemByIds(
+                areaDoc.items,
+            );
+            return {
+                id: areaDoc.id,
+                name: areaDoc.name,
+                map: areaDoc.map,
+                creatures: areaCreatures,
+                items: areaItems,
+                // where developer register logic into this place.
+                areaManagers: areaDoc.areaManagers.map(areaDocManager => ({
+                    id: areaDocManager.id,
+                    onTimeUpdate: parseFunction(
+                        areaDocManager.onTimeUpdateScript,
+                    ) as (
+                        world: GameWorld,
+                        area: Area,
+                    ) => Array<GameWorldUpdate> | null,
+                    onCreatureLeave: parseFunction(
+                        areaDocManager.onCreatureLeaveScript,
+                    ) as (
+                        world: GameWorld,
+                        creature: Creature,
+                        target: Area,
+                    ) => Array<GameWorldUpdate> | null,
+                    onCreatureDead: parseFunction(
+                        areaDocManager.onCreatureDeadScript,
+                    ) as (
+                        world: GameWorld,
+                        creature: Creature,
+                    ) => Array<GameWorldUpdate> | null,
+                    onIdle: parseFunction(areaDocManager.onIdleScript) as (
+                        world: GameWorld,
+                        creature: Creature,
+                    ) => Array<GameWorldUpdate> | null,
+                })),
+                meta: areaDoc.meta,
+            };
+        }));
+
+        return results;
+    }
+
     async getArea(areaId: string): Promise<Area> {
         const areaDoc = await this.areaRepository.getAreaById(areaId);
         const areaCreatures = await this.creatureRepository.mgetCreatureByIds(

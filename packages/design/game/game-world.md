@@ -34,15 +34,19 @@ type MessageUpdate = {
     type: "message",
     payload: {
         template: string;
-        [key: string]: any;
+        data: {
+            [key: string]: any;
+        }
     }
 }
 const update = {
     type: "message",
     payload: {
         // this format is for i18n
-        template: "you gain ${payload.exp}"
-        exp: 26
+        template: "you gain ${payload.exp}",
+        data: {
+            exp: 26
+        }
     }
 }
 ```
