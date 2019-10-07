@@ -18,7 +18,7 @@ type AreaManager = {
 
 type Area = {
     id: string,
-    name: string,
+    name: string, // i18n template available
     map: Array<Array<Tile | null>>,
     creatures: {
         [creatureId: string]: CreatureDoc,
