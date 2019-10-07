@@ -55,6 +55,10 @@ const defaultAreaManager = {
     onCreatureDead: (world: GameWorld, creature: Creature) => Array<GameWorldUpdate> | null,
     // trigger when player is **not** in thie area, for Evolution of the area
     onIdle: (world: GameWorld, creature: Creature) => Array<GameWorldUpdate> | null,
+    // run when bundle's area loaded
+    init: (world: GameWorld) => {
+
+    }
 }
 
 module.exports = {
@@ -75,10 +79,6 @@ module.exports = {
   meta: {
       [metaKey: string]: any;
   },
-  // run when bundle's area loaded
-  init: (world: GameWorld) => {
-
-  }
 }
 ```
 
@@ -184,6 +184,7 @@ module.exports = {
     metadata: {
       levelMultiplier: 0.33,
     },
+    // 每次applyWorldUpdate时触发attribute的更新
     fn: function (creature, currentValue, dependencies) {
       // Using the example formula from before:
       return Math.floor(

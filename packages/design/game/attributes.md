@@ -9,39 +9,29 @@ Attributes comprise the changing numerical properties of an Npc or Player (both 
 const manaAttribute = {
   name: 'mana',
   base: 10,
-
-  // To make an attribute computed you add the 'formula' config with the
-  // 'requires' and 'fn' properties
   formula: {
-
-    // 'requires' specifies which attributes the formula depends on for its
-    // calculation. You may depend on attributes defined in a different bundle.
     requires: ['intellect'],
 
     metadata: {
-      // some custom constant we'll use in the formula
       levelMultiplier: 0.33,
     },
-
-    // 'fn' is the formula function. The function will automatically receive
-    // as arguments:
-    //   1. The character the attribute belongs to
-    //   2. The current value, after effects, of this attribute
-    //   3+ One argument for each attribute in the `requires` list in the same
-    //      order. For example, if your requires was:
-    //        ['foo', 'bar', 'baz']
-    //      Then your formula function would receive:
-    //        function (character, mana, foo, bar, baz)
-    //      Each is the value, after effects/formulas, of that attribute
-    fn: (me: Creature, currentValue: number, dependencies: { [dependency: string]: number }) => {
+    // 每次applyWorldUpdate时触发attribute的更新
+    fn: function (creature, currentValue, dependencies) {
       // Using the example formula from before:
       return Math.floor(
-        mana +
-        intellect +
+        currentValue +
+        dependencies.intellect +
         // to access the `metadata` inside the formula use `this.metadata`
-        character.level * this.metadata.levelMultiplier
+        creature.meta.level * this.metadata.levelMultiplier
       );
     }
+  },
+  // how about some creature don't have this attribute in their definition
+  fallback: (creature) => {
+    if (creature.meta.intellect) {
+      return creature.meta.intellect * 10
+    }
+    return 100
   }
 }
 
