@@ -31,6 +31,25 @@ export type GameWorldUpdate = {
 };
 
 
+export type GameStates = {
+    items: {
+
+    };
+    itemTemplates: {
+        
+    };
+    creatures: {
+        
+    };
+    areas: {
+        
+    };
+    creatureTemplates: {
+        
+    };
+}
+
+
 class GameWorld {
     db: GameWorldDB;
     itemRepository: ItemRepository;
@@ -40,6 +59,7 @@ class GameWorld {
     areaRepository: AreaRepository;
     store: Store;
     timer: GameTimer;
+    states: GameStates;
     constructor(db: GameWorldDB) {
         this.db = db;
         this.itemRepository = new ItemRepository(this.db.items);
@@ -67,12 +87,19 @@ class GameWorld {
         return await this.store.getArea(areaId);
     }
 
-    // 获取当前所处area
+    // 获取玩家当前所处area
     async getCurArea(): Promise<Area> {
         const player = await this.getPlayer();
         // 获取玩家所在area
         const areaId = player.position.areaId;
         return await this.store.getArea(areaId);
+    }
+
+    // 获取非当前area
+    async getExtraAreas(): Promise<Area[]> {
+        const player = await this.getPlayer();
+        const areaId = player.position.areaId;
+        return await this.store.getExtraAreas(areaId);
     }
 
     async getAllAreas(): Promise<Area[]> {
@@ -86,21 +113,41 @@ class GameWorld {
         return await this.getCreature(playerId)
     }
 
+    async getAction(actionId: string): Promise<Action> {
+        return await this.store.getAction(actionId);
+    }
+
     async getItem (itemId: string): Promise<Item> {
         return await this.store.getItem(itemId);
     }
     async getCreature(creatureId: string): Promise<Creature> {
         return await this.store.getCreature(creatureId);
     }
-    async run() {
+
+    loadStates() {
+
+    }
+
+    async run(): Promise<void> {
+        // 加载世界对象状态
+        this.loadStates();
         // 时间开始流动 toki o wutokimasi
         await this.timer.tick();
     }
+
     // applyWorldUpdates用于更新整个游戏世界状态的API，是事务的，有一个异常则回滚全部
     applyWorldUpdates (updates: GameWorldUpdate[]): void {
-        updates.forEach(update => this.applyWorldUpdate(update))
+        // 备份 打算直接拷贝
+        // const temp = 
+        try {
+            updates.forEach(update => this.applyWorldUpdate(update))
+        } catch(err) {
+            console.log(err);
+            // 回滚
+        }
     }
 
+    // 返回一个新的世界状态就行了
     applyWorldUpdate(update: GameWorldUpdate): void {
         switch(update.type) {
             case EResultType.Message: {

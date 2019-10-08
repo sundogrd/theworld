@@ -1,110 +1,203 @@
 import GameWorld, { GameWorldUpdate, EResultType } from "../GameWorld";
 import Creature from "../types/Creature";
 import Area from '../types/Area';
+import Item from '../types/Item';
+import Action from '../types/Action';
+import {Tile} from '../types/docs/AreaDoc';
 // the world 时间机制实现
 
+// 优化点：
+// 是否可以将action加载就读入内存，不用每次都查数据库之类的
+// 是否可以将update进行缓存，而非是产生update就立即更新数据库
+
 /**
- * 类似于elona的时间机制，时间流动和玩家动作有关系
- * 打算玩家
+ * 类似于elona的时间机制
  *
  * @class GameTimer
  */
+
+type ActionInfo = {
+    actionId: string;
+    target: Creature | Item | Tile;
+};
+
+
+function isCreature(creature: Creature | Item | Tile): creature is Creature {
+    return 'gendor' in creature;
+} 
+
+function isItem(item: Creature | Item | Tile): item is Creature {
+    return 'inventory' in item;
+} 
+
+function isTile(tile: Creature | Item | Tile): tile is Tile {
+    return 'placeable' in tile;
+} 
+
 class GameTimer {
+    // 最多增长的值 防止大数问题
+    private MAX_TURN: number = 100000;
+    // 当前的turn
+    private nowTurn: number = 0;
     constructor(public world: GameWorld) {
         this.world = world;
+        this.init();
     }
 
-    // 问题： 有两种考虑
-    // 1: 人物每动一次，就会产生一点待消耗时间片，要等其他消耗完这个时间片才可以继续进行下一步？
-    // 2: 人物每动一次都累加时间片，其他对象不停消耗这个时间片？
+    init() {
+        // 这个需要保存，不然重开游戏不能保证时序
+        // 先不考虑 TODO
+        this.nowTurn = 0; // 需要加载改值
+    }
+
+    canApplyThisTurn(creature: Creature) {
+        if (creature.nextTurn === this.nowTurn) {
+            return true;
+        }
+        return false;
+    }
+
+    async stepNextTurn(): Promise<void> {
+        this.nowTurn = (this.nowTurn + 1) % this.MAX_TURN;
+        await this.tick();
+    }
+
     async tick(): Promise<void> {
         const area = await this.world.getCurArea();
         const player = await this.world.getPlayer();
-        const {nextTurn} = player;
+        const extraAreas = await this.world.getExtraAreas();
 
         const {creatures} = area;
 
         const results = await Promise.all(Object.keys(creatures).map(async key => {
             return await this.world.store.getCreature(key)
-        }))
+        }));
 
-        // 当前区域部分
-        results.forEach((res: Creature) => {
-            if (res.id !== player.id) {
-                this.world.applyWorldUpdate(this.consumeLoop(res, nextTurn, player, area, this.world))
-            }
+        await this.waitForArea(area, results, extraAreas, player)
+        
+        await this.waitForCreatures(results, player, area);
+        
+        await this.waitForPlayer(player, area);
+        await this.stepNextTurn();
+    }
+
+    async waitForArea(curAea: Area, creatures: Creature[], idleAreas: Area[], player: Creature): Promise<void> {
+        // 当前area
+        creatures.forEach(c => {
+            this.triggerCreatureDead(c, curAea, this.world)
+            this.triggerCreatureLeave(c, curAea, this.world)
         })
-        // idle部分 -- 不在当前区域部分
-        // this.world.get
+        this.triggerTimeUpdate(curAea, this.world);
+        // 其他area
+        this.triggerIdle(idleAreas, this.world);
     }
 
+    async waitForCreatures(creatures: Creature[], player: Creature, area: Area): Promise<void> {
+        // 首先判断
+        creatures.filter(c => c.id !== player.id).forEach(async c => {
+            await this.dealWithCreature(c, player, area)
+        })
+    }
 
-    // 将一个loop里面产生的update合并成一个updates,优化性能
-    // TODO
-    mergeUpdates(updates: GameWorldUpdate[]): GameWorldUpdate {
-        return {
-            type: EResultType.Message,
-            payload: null
+    async waitForPlayer(player: Creature, area: Area): Promise<void> {
+        if (this.canApplyThisTurn(player)) {
+            await this.dealWithPlayer(player, area);
         }
     }
 
-    // 这里可把所有回合的update都汇总，简化操作
-    // 这里有个问题：
-    // 如果其他creature已经死亡，在这个loop之内的剩余时间还需要调用对应方法吗？
-    // 如果其他creature已经离开本area, 那么在loop剩余时间之内还需调用idle方法吗？
-    consumeLoop(creature: Creature, time: number, player: Creature, area: Area, world: GameWorld): GameWorldUpdate {
-        const updates: GameWorldUpdate[] = [];
-        const {nextTurn} = creature;
-        // 应该有个剩余时间机制 TODO
-        // 比如player行动是10    怪物闪电小子行动是3，那么player应该可能受到3次攻击，并且闪电小子还有1个时间结余。
-        // 其他creature的回合
-        while ((time = time - nextTurn) > 0) {
-            // 如果已经死亡
-            if (!creature.isAlive) {
-                updates.concat(this.triggerCreatureDead(creature, area, world));
-                break;
-            }
-            // 如果已经离开地图
-            if (creature.position.areaId !== area.id) {
-                updates.concat(this.triggerCreatureLeave(creature, area, world));
-                break;
-            }
-            // 正常的执行area更新
-            updates.concat(this.triggerTimeUpdate(area, this.world));
-
-            // 其他creature do action
-            const action = creature.think(world, player, creature);
-            // do action next
-        }
-        return this.mergeUpdates(updates);
+    // 获取其他信号量
+    getSignal(player: Creature, area: Area, world: GameWorld): ActionInfo {
+        // 接受信号
+        const rand = Math.random();
+        console.log('rand is: ', rand);
+        return rand  < 0.001 ? {
+            actionId: 'turn-north',
+            target: player
+        } : null;
     }
 
-    
-    private triggerTimeUpdate(area: Area, world: GameWorld): GameWorldUpdate[] {
+    async dealWithCreature(creature: Creature, player: Creature, area: Area): Promise<void> {
+        if (this.canApplyThisTurn(creature)) {
+            const nextAction = creature.think(this.world, player, creature)
+            const rAction: Action = await this.world.getAction(nextAction.actionId);
+            this.doAction(creature, nextAction.target, rAction);
+        }
+    }
+
+    id: string;
+    name: string;
+    timeSpend: (world?: GameWorld, me?: Creature, target?: Item | Creature) => number;
+    check: (world: GameWorld, me: Creature, target?: Item | Creature) => boolean;
+    do: (world: GameWorld, me: Creature, target?: Item | Creature) => Array<GameWorldUpdate> | null;
+
+    // 具体的操作，应该产生updates更新world，这里先不管
+    doAction(who: Creature, to: Creature | Item | Tile, action: Action): void{
+        if (isCreature(to)) {
+            console.log(`${who.name} do the action {${action.id}} to ${to.name}`)
+        } else if (isItem(to)) {
+            console.log(`${who.name} do the action {${action.id}} to ${to.name}`)
+        } else if (isTile(to)) {
+            console.log(`${who.name} do the action {${action.id}} to ${to.position.x}-${to.position.y}`)
+        } else {
+            throw new Error('')
+        }
+
+        if (action.check(this.world, who, to)) {
+            // 需要更新creature nextTurn
+            const time = action.timeSpend(this.world, who, to);
+            who.nextTurn += time; // 这里也应该写入数据库
+            // 产生update并进行
+            const updates = action.do(this.world, who, to);
+            this.world.applyWorldUpdates(updates);
+        }
+    }
+
+    async dealWithPlayer(player: Creature, area: Area): Promise<void> {
+        let action = this.getSignal(player, area, this.world);
+        while(!action) {
+            action = this.getSignal(player, area, this.world);
+        }
+        const {actionId, target} = action;
+        const rAction: Action = await this.world.getAction(actionId);
+        this.doAction(player, target, rAction)
+    }
+
+    // 考虑存在一个缓存机制，每次更新都更改缓存，一定时候才写入数据库 TODO
+    // 这个考虑是在这里缓存update还是在update生效后缓存数据库？
+    private cache() {
+
+    }
+
+    private triggerTimeUpdate(area: Area, world: GameWorld): void {
         const {areaManagers} = area;
         const updates: GameWorldUpdate[] = [];
         areaManagers.forEach(manager => {
             updates.push(manager['onTimeUpdate'].call(area, world, area));
         })
-        return updates;
+        this.world.applyWorldUpdates(updates);
     }
 
-    private triggerCreatureLeave(creature: Creature, area: Area, world: GameWorld): GameWorldUpdate[] {
+    private triggerCreatureLeave(creature: Creature, area: Area, world: GameWorld): void {
         const {areaManagers} = area;
         const updates: GameWorldUpdate[] = [];
         areaManagers.forEach(manager => {
             updates.push(manager['onCreatureLeave'].call(area, world, creature, area));
         })
-        return updates;
+        this.world.applyWorldUpdates(updates);
     }
 
-    private triggerCreatureDead(creature: Creature, area: Area, world: GameWorld): GameWorldUpdate[] {
+    private triggerCreatureDead(creature: Creature, area: Area, world: GameWorld): void {
         const {areaManagers} = area;
         const updates: GameWorldUpdate[] = [];
         areaManagers.forEach(manager => {
             updates.push(manager['onCreatureDead'].call(area, world, creature, area));
         })
-        return updates;
+        this.world.applyWorldUpdates(updates);
+    }
+
+    // TODO
+    private triggerIdle(areas: Area[], world: GameWorld) {
+
     }
 }
 

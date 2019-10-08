@@ -1,4 +1,3 @@
-// const assert = require('assert');
 import GameWorld,{GameWorldDB} from '../GameWorld';
 import * as Datastore from 'nedb';
 import * as path from 'path';
@@ -80,18 +79,15 @@ describe('Test GameWorld',  () => {
             function gameNext() {
                 return new Promise(resolve => {
                     setTimeout(function() {
-                        console.log('game run now');
+                        console.log('game run over');
                         resolve();
                     }, 1000)
                 })
             }
             
-            await gameNext();
             await gw.run();
+
             await gameNext();
-            await gw.run();
-            await gameNext();
-            await gw.run();
             assert.ok(1);
         })
     })

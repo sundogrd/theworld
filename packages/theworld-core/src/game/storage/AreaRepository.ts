@@ -24,7 +24,7 @@ class AreaRepository {
         });
     }
 
-getAreaById(id: string): Promise<AreaDoc> {
+    getAreaById(id: string): Promise<AreaDoc> {
         return new Promise((resolve, reject): void => {
             this.store.findOne({ id: id }, function(err: Error, doc: AreaDoc) {
                 if (err) {
@@ -32,6 +32,18 @@ getAreaById(id: string): Promise<AreaDoc> {
                     return;
                 }
                 resolve(doc);
+            });
+        });
+    }
+
+    getExtraAreas(id: string): Promise<AreaDoc[]> {
+        return new Promise((resolve, reject): void => {
+            this.store.find({$not: {id: id}}, function(err: Error, docs: AreaDoc[]) {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(docs);
             });
         });
     }
