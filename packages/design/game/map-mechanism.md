@@ -10,17 +10,21 @@ type AreaDoc = {
 }
 
 type Tile = {
-    type: string; // like 'water'
+    type: string, // like 'water'
     position: {
         areaId: string;
         x: number;
         y: number;
         direction: EDirection;
-    }
-    placeable: boolean;
-    moveable: boolean; // whether creature can move through the tile
-    origin: string; // origin type if place by something, for restore if the thing remove.
-    meta: any;
+    },
+    portal?: {
+      usable: (creature: Creature, world: World) => boolean,
+      targetAreaId: string,
+    },
+    placeable: boolean,
+    moveable: boolean, // whether creature can move through the tile
+    origin: string, // origin type if place by something, for restore if the thing remove.
+    meta: any,
 }
 
 type AreaManager = {
@@ -61,4 +65,16 @@ Tile一个Area的组成部分，主要用来形成阻挡、让Creature判断行�
 AreaManager用来给开发者注册逻辑用的，
 
 ## Transport between Area
-在Area之间的移动是通过Map中特殊的Tile实现的。
+在Area之间的移动是通过Map中的Tile的特殊属性portal实现的。
+有portal的Tile可以进入其他的Area
+```Javascript
+{
+  // ...
+  portal?: {
+    usable: (creature: Creature, world: World) => boolean,
+    targetAreaId: string,
+  }
+}
+```
+
+usable表明当前creature是否可用这个portal，targetAreaId表示这个portal连接的area
