@@ -43,7 +43,8 @@ const update = {
     type: "message",
     payload: {
         // this format is for i18n
-        template: "you gain ${payload.exp}",
+        // think ejs render， so there can do not hava data prefix
+        template: "you gain ${exp}",
         data: {
             exp: 26
         }

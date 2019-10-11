@@ -31,7 +31,7 @@ class CreatureRepository {
         return new Promise((resolve, reject): void => {
             this.store.findOne({ id: id }, function(err: Error, doc: CreatureDoc) {
                 if (err || !doc) {
-                    reject(err || 'No creature exist');
+                    reject(err || new Error('No creature exist'));
                     return;
                 }
                 resolve(doc);
