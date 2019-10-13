@@ -13,6 +13,10 @@
       "path": "packages/design"
     },
     {
+      "name": "Bundles: Fantasy Base Bundle",
+      "path": "packages/fantasy-base-bundle"
+    },
+    {
       "name": "monorepo",
       "path": "."
     }
@@ -68,7 +72,8 @@
     },
     "eslint.workingDirectories": [
       "packages/theworld-ui",
-      "packages/theworld-core"
+      "packages/theworld-core",
+      "packages/fantasy-base-bundle"
     ],
     "eslint.validate": [
       "javascript",

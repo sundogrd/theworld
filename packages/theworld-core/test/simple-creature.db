@@ -1,0 +1,1 @@
+{"id":"#player","name":"lwio","description":"one of the founders of sundog","gender":"male","race":"human","inventory":{"maxItem":100,"itemIds":[]},"equipment":{},"templateId":"lwio-template","state":"unknown","position":{"areaId":"new_start","x":0,"y":0,"direction":"east"},"attributes":{},"isAlive":true,"thinkScript":"","nextTurn":20,"meta":{},"_id":"0xQWcrQkhbF5btCt"}

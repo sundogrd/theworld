@@ -51,7 +51,7 @@ function createMainWindow() {
             console.log(`[DEBUG]添加插件${name}错误：`, err),
         );
 
-      installExtension(MOBX_DEVTOOLS)
+    installExtension(MOBX_DEVTOOLS)
         .then((name: any) => console.log(`[DEBUG]添加插件：${name}`))
         .catch((err: Error) =>
             console.log(`[DEBUG]添加插件${name}错误：`, err),

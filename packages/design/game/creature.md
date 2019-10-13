@@ -57,7 +57,7 @@ type CreatureDoc = {
         actionId: string;
         target: null | Creature | Item | Tile;
     },
-    nextTurn: number; // 下一个行动的时间
+    nextTurn: number; // 下一个行动的时间剩余时间片
     meta: {
         [metaKey]: any;
     }

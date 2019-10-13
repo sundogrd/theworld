@@ -7,7 +7,7 @@ type Item = {
     template_id: string;
     meta: {
         [metaKey: string]: any;
-    }
-}
+    };
+};
 
-export default Item
+export default Item;

@@ -1,5 +1,5 @@
-import * as Datastore from "nedb";
-import AreaDoc from "../types/docs/AreaDoc";
+import * as Datastore from 'nedb';
+import AreaDoc from '../types/docs/AreaDoc';
 
 /**
  * 用于操作area数据库
@@ -7,61 +7,100 @@ import AreaDoc from "../types/docs/AreaDoc";
  * @class AreaRepository
  */
 class AreaRepository {
-    store: Datastore
+    store: Datastore;
     constructor(store: Datastore) {
-        this.store = store
+        this.store = store;
     }
 
     addArea(creatureDoc: AreaDoc): Promise<void> {
         return new Promise((resolve, reject): void => {
             this.store.insert(creatureDoc, function(err: Error, _doc: AreaDoc) {
-                if(err) {
-                    reject(err)
-                    return
+                if (err) {
+                    reject(err);
+                    return;
                 }
-                resolve()
-            })
-        })
+                resolve();
+            });
+        });
     }
 
     getAreaById(id: string): Promise<AreaDoc> {
         return new Promise((resolve, reject): void => {
-            this.store.find({id: id}, function(err: Error, doc: AreaDoc) {
-                if(err) {
-                    reject(err)
-                    return
+            this.store.findOne({ id: id }, function(err: Error, doc: AreaDoc) {
+                if (err) {
+                    reject(err);
+                    return;
                 }
-                resolve(doc)
-            })
-        })
+                resolve(doc);
+            });
+        });
     }
 
-    updateArea(query: any, update: any): Promise<{numAffected: number, affectedDocuments: any}> {
+    getExtraAreas(id: string): Promise<AreaDoc[]> {
         return new Promise((resolve, reject): void => {
-            this.store.update(query, update, { returnUpdatedDocs: true, upsert: false },function(err: Error, numberOfUpdated: number, affectedDocuments: any) {
-                // numRemoved = 1
-                if(err) {
-                    reject(err)
+            this.store.find({$not: {id: id}}, function(err: Error, docs: AreaDoc[]) {
+                if (err) {
+                    reject(err);
+                    return;
                 }
-                resolve({
-                    numAffected: numberOfUpdated,
-                    affectedDocuments: affectedDocuments,
-                })
+                resolve(docs);
             });
-        })
+        });
+    }
+
+    getAllAreas(): Promise<AreaDoc[]> {
+        return new Promise((resolve, reject): void => {
+            this.store.find({}, function(err: Error, docs: AreaDoc[]) {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(docs);
+            });
+        });
+    }
+
+    updateArea(
+        query: any,
+        update: any,
+    ): Promise<{ numAffected: number; affectedDocuments: any }> {
+        return new Promise((resolve, reject): void => {
+            this.store.update(
+                query,
+                update,
+                { returnUpdatedDocs: true, upsert: false },
+                function(
+                    err: Error,
+                    numberOfUpdated: number,
+                    affectedDocuments: any,
+                ) {
+                    // numRemoved = 1
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve({
+                        numAffected: numberOfUpdated,
+                        affectedDocuments: affectedDocuments,
+                    });
+                },
+            );
+        });
     }
 
     removeAreaById(creatureId: string): Promise<void> {
         return new Promise((resolve, reject): void => {
-            this.store.remove({ id: creatureId }, {}, function (err, _numRemoved) {
+            this.store.remove({ id: creatureId }, {}, function(
+                err,
+                _numRemoved,
+            ) {
                 // numRemoved = 1
-                if(err) {
-                    reject(err)
+                if (err) {
+                    reject(err);
                 }
-                resolve()
+                resolve();
             });
-        })
+        });
     }
 }
 
-export default AreaRepository
+export default AreaRepository;
