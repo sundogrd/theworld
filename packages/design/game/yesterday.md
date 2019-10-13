@@ -13,16 +13,16 @@ smart 可以执行特定的AI或者脚本
 ```yaml
 name: string
 id: string
-gendor: string
-items: 
-    - 
+gender: string
+items:
+    -
         id: string
         description: string
         type: string # 物品类型
         meta: object # 比如售价 比如效果
         # ...
 effects: # 状态 [Effect]
-    - 
+    -
         id: string
         type: string
         description: string
@@ -43,7 +43,7 @@ attributes:
     mp: Attribute
     # 其他
 position: Postion
-skills: 
+skills:
     -
         cook: Skill
 meta: object # 自定义属性
@@ -113,7 +113,7 @@ id: string
 type: ItemType
 
 effects: # 状态 每种物品有不同的schema，这个可以开发者自定义对应物品的schema
-    - 
+    -
         # 虽然可以给出几个 但还是自己定义吧，比如speed hp mp等
 meta: object # 自定义属性
 ```

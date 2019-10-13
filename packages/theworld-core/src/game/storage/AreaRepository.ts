@@ -26,12 +26,36 @@ class AreaRepository {
 
     getAreaById(id: string): Promise<AreaDoc> {
         return new Promise((resolve, reject): void => {
-            this.store.find({ id: id }, function(err: Error, doc: AreaDoc) {
+            this.store.findOne({ id: id }, function(err: Error, doc: AreaDoc) {
                 if (err) {
                     reject(err);
                     return;
                 }
                 resolve(doc);
+            });
+        });
+    }
+
+    getExtraAreas(id: string): Promise<AreaDoc[]> {
+        return new Promise((resolve, reject): void => {
+            this.store.find({$not: {id: id}}, function(err: Error, docs: AreaDoc[]) {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(docs);
+            });
+        });
+    }
+
+    getAllAreas(): Promise<AreaDoc[]> {
+        return new Promise((resolve, reject): void => {
+            this.store.find({}, function(err: Error, docs: AreaDoc[]) {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(docs);
             });
         });
     }

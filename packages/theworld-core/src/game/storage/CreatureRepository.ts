@@ -29,9 +29,9 @@ class CreatureRepository {
 
     getCreatureById(id: string): Promise<CreatureDoc> {
         return new Promise((resolve, reject): void => {
-            this.store.find({ id: id }, function(err: Error, doc: CreatureDoc) {
-                if (err) {
-                    reject(err);
+            this.store.findOne({ id: id }, function(err: Error, doc: CreatureDoc) {
+                if (err || !doc) {
+                    reject(err || new Error('No creature exist'));
                     return;
                 }
                 resolve(doc);
