@@ -3,6 +3,7 @@ import ItemDoc from './game/types/docs/ItemDoc';
 import ItemTemplateDoc from './game/types/docs/ItemTemplateDoc';
 import CreatureDoc from './game/types/docs/CreatureDoc';
 import AttributeDoc from './game/types/docs/AttributeDoc';
+import ActionDoc from './game/types/docs/ActionDoc';
 
 type BundleContent = {
     items?: {
