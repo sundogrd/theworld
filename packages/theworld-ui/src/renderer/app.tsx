@@ -1,10 +1,12 @@
+import { hot } from 'react-hot-loader/root';
 import * as React from 'react';
-import { routes, RouteWithSubRoutes } from './routes';
-import { BrowserRouter as Router } from 'react-router-dom';
+import routes from './routes';
 import './style/app.less';
-import {Provider, observer} from 'mobx-react';
+import { Provider, observer } from 'mobx-react';
 import { createStore } from './store/index';
 import { useLocalStore } from 'mobx-react';
+import { BrowserRouter, Link } from 'react-router-dom';
+import renderRoutes from './routes/renderRoutes';
 
 // import DevTools, {configureDevtool} from 'mobx-react-devtools';
 // configureDevtool({
@@ -26,15 +28,16 @@ const App = observer<any>(() => {
     return (
         <div>
             <Provider {...store}>
-                <Router>
-                    {routes.map((route, i) => (
-                        <RouteWithSubRoutes key={i} {...route} />
-                    ))}
-                </Router>
+                <BrowserRouter>
+                    <Link to={"/home"} >asfasf</Link>
+                    {renderRoutes(routes)}
+                </BrowserRouter>
             </Provider>
             {/* <DevTools/> */}
         </div>
     );
 })
 
-export default App
+React.createElement
+
+export default hot(App)

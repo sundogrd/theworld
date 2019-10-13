@@ -3,12 +3,15 @@ import Home from '../views/HomeView';
 import Game from '../views/GameView';
 import Bundle from '../views/BundleView';
 import Records from '../views/RecordsView';
-import { Route, Redirect } from 'react-router-dom';
+import { RouteConfig } from 'react-router-config';
+import { Redirect } from 'react-router';
 
-export const routes = [
+const routes: Array<RouteConfig> = [
     {
         path: '/',
         redirect: '/home',
+        // eslint-disable-next-line react/display-name
+        component: () => <Redirect to="/home"/>,
     },
     {
         path: '/home',
@@ -28,17 +31,4 @@ export const routes = [
     },
 ];
 
-export function RouteWithSubRoutes(route: any) {
-    return (
-        <Route
-            path={route.path}
-            render={props =>
-                route.redirect ? (
-                    <Redirect from={route.path} to={route.redirect}></Redirect>
-                ) : (
-                    <route.component {...props} routes={route.routes} />
-                )
-            }
-        />
-    );
-}
+export default routes

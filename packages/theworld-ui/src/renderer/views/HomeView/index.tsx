@@ -11,7 +11,7 @@ export default function Home() {
             <Link to="/bundle" className="operate">
                 新的冒险
             </Link>
-            <Link to="records" className="operate">
+            <Link to="/records" className="operate">
                 旧的回忆
             </Link>
         </div>
