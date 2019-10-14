@@ -8,7 +8,8 @@ import './index.less';
 import BundleItem from './BundleItem';
 import { useLocalStore } from 'mobx-react';
 
-type BundleViewProps = {};
+type BundleViewProps = {
+};
 
 const totalBundles = [
     {

@@ -29,7 +29,6 @@ const App = observer<any>(() => {
         <div>
             <Provider {...store}>
                 <BrowserRouter>
-                    <Link to={"/home"} >asfasf</Link>
                     {renderRoutes(routes)}
                 </BrowserRouter>
             </Provider>

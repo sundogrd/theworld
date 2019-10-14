@@ -13,7 +13,7 @@ module.exports = {
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         camelcase: 'off',
-        "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "always" }],
+        "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "never" }],
         '@typescript-eslint/indent': ["error", 4],
     },
     parserOptions: {

@@ -8,7 +8,7 @@ import Actions from './actions/index';
 import PlayerStateDisplayer from './states/player';
 import TileStateDisplayer from './states/tile';
 
-const GameView = observer(() => {
+const GameView: React.FunctionComponent<{}> = observer(() => {
     const { gameStore } = useStores();
     return (
         <div className="game-view">
