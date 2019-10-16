@@ -30,7 +30,7 @@ class ItemRepository {
 
     getItemById(id: string): Promise<ItemDoc> {
         return new Promise((resolve, reject): void => {
-            this.store.find({ id: id }, function(err: Error, doc: ItemDoc) {
+            this.store.findOne({ id: id }, function(err: Error, doc: ItemDoc) {
                 if (err) {
                     reject(err);
                     return;

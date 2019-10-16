@@ -19,7 +19,7 @@ describe('Creature', () => {
         it('should update base value', () => {
             console.log(db);
             creatureRepository.addCreature({
-                id: 'lwio',
+                id: '#player',
                 name: 'lwio',
                 description: 'one of the founders of sundog',
                 gender: ECreatureGender.MALE,
@@ -32,7 +32,7 @@ describe('Creature', () => {
                 templateId: 'lwio-template',
                 state: 'unknown', // 保留，智能状态机 state machine
                 position: {
-                    areaId: 'death-land',
+                    areaId: 'new_start',
                     x: 0,
                     y: 0,
                     direction: EDirection.EAST,
@@ -43,7 +43,7 @@ describe('Creature', () => {
                 attributes: {},
                 isAlive: true, // false if the creature is dead. :)
                 thinkScript: '',
-                nextTurn: 0, // 下一个行动的时间
+                nextTurn: 20, // 下一个行动的时间
                 meta: {},
             });
         });

@@ -9,6 +9,8 @@ class World {
         items: Datastore;
         creatures: Datastore;
         areas: Datastore;
+        itemTemplates: Datastore;
+        creatureTemplates: Datastore;
     };
     gameWorld: GameWorld;
     wss?: WebSocket.Server;
@@ -33,6 +35,14 @@ class World {
             filename: path.resolve(this.worldDir, './areas.db'),
             autoload: true,
         });
+
+        this.db.itemTemplates = new Datastore({
+            filename: path.resolve(this.worldDir, './itemTemplates.db')
+        })
+
+        this.db.creatureTemplates = new Datastore({
+            filename: path.resolve(this.worldDir, './creatureTemplates.db')
+        })
 
         this.gameWorld = new GameWorld(this.db);
     }
