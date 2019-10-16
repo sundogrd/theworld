@@ -5,7 +5,7 @@ import './style/app.less';
 import { Provider, observer } from 'mobx-react';
 import { createStore } from './store/index';
 import { useLocalStore } from 'mobx-react';
-import { BrowserRouter, Link } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import renderRoutes from './routes/renderRoutes';
 
 // import DevTools, {configureDevtool} from 'mobx-react-devtools';
@@ -36,7 +36,5 @@ const App = observer<any>(() => {
         </div>
     );
 })
-
-React.createElement
 
 export default hot(App)

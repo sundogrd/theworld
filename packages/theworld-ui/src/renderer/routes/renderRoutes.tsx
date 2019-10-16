@@ -31,22 +31,24 @@ const renderRoutes: React.FunctionComponent<any> = (routes: Array<RouteConfig>, 
         <Switch {...switchProps}>
             {routes.map((route, i) => {
                 if (route.redirect) {
-                    <Route path={route.path}>
-                        <Redirect to={route.redirect} />
-                    </Route>
+                    return (
+                        <Route path={route.path}>
+                            <Redirect to={route.redirect} />
+                        </Route>
+                    )
                 }
                 return <Route
                     key={route.key || i}
                     path={route.path}
                     exact={route.exact}
                     strict={route.strict}
-                    render={props =>
-                        route.render ? (
+                    render={props => {
+                        return route.render ? (
                             route.render({ ...props, ...extraProps, route: route })
                         ) : (
                             <route.component {...props} {...extraProps} route={route} />
                         )
-                    }
+                    }}
                 />
             })}
         </Switch>

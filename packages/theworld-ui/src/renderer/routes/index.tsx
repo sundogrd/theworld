@@ -7,15 +7,6 @@ import { RouteConfig } from './renderRoutes';
 
 const routes: Array<RouteConfig> = [
     {
-        path: '/home',
-        component: Home,
-    },
-    {
-        path: '/',
-        redirect: '/home',
-        exact: true,
-    },
-    {
         path: '/bundle',
         component: Bundle,
     },
@@ -26,6 +17,15 @@ const routes: Array<RouteConfig> = [
     {
         path: '/records',
         component: Records,
+    },
+    {
+        path: '/home',
+        component: Home,
+    },
+    {
+        path: '/',
+        redirect: '/home',
+        exact: true,
     },
 ];
 
