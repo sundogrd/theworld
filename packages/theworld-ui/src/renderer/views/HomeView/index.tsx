@@ -2,7 +2,7 @@ import * as React from 'react';
 import './index.less';
 import { Link } from 'react-router-dom';
 
-export default function Home() {
+const Home: React.FunctionComponent<{}> = () => {
     return (
         <div className="home-view">
             <div className="logo-wrapper">
@@ -11,9 +11,11 @@ export default function Home() {
             <Link to="/bundle" className="operate">
                 新的冒险
             </Link>
-            <Link to="records" className="operate">
+            <Link to="/records" className="operate">
                 旧的回忆
             </Link>
         </div>
     );
 }
+
+export default Home

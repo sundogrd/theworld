@@ -16,6 +16,8 @@ const root = document.getElementById('app');
 //     logFilter: change => true,
 // });
 
+
+
 ReactDOM.render(
     <div>
         <AppContainer>
@@ -26,16 +28,4 @@ ReactDOM.render(
     root,
 );
 
-// Hot Module Replacement API
-if (module.hot) {
-    module.hot.accept('./app', () => {
-        // tslint:disable-next-line:no-require-imports
-        const HotApp = require('./app').default;
-        ReactDOM.render(
-            <AppContainer>
-                <HotApp />
-            </AppContainer>,
-            root,
-        );
-    });
-}
+

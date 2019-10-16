@@ -1,19 +1,11 @@
-import * as React from 'react';
+// import * as React from 'react';
 import Home from '../views/HomeView';
 import Game from '../views/GameView';
 import Bundle from '../views/BundleView';
 import Records from '../views/RecordsView';
-import { Route, Redirect } from 'react-router-dom';
+import { RouteConfig } from './renderRoutes';
 
-export const routes = [
-    {
-        path: '/',
-        redirect: '/home',
-    },
-    {
-        path: '/home',
-        component: Home,
-    },
+const routes: Array<RouteConfig> = [
     {
         path: '/bundle',
         component: Bundle,
@@ -26,19 +18,15 @@ export const routes = [
         path: '/records',
         component: Records,
     },
+    {
+        path: '/home',
+        component: Home,
+    },
+    {
+        path: '/',
+        redirect: '/home',
+        exact: true,
+    },
 ];
 
-export function RouteWithSubRoutes(route: any) {
-    return (
-        <Route
-            path={route.path}
-            render={props =>
-                route.redirect ? (
-                    <Redirect from={route.path} to={route.redirect}></Redirect>
-                ) : (
-                    <route.component {...props} routes={route.routes} />
-                )
-            }
-        />
-    );
-}
+export default routes

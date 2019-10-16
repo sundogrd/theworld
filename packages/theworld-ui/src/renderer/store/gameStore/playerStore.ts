@@ -1,4 +1,4 @@
-import { EDirection } from '../../types/area';
+import { EDirection } from '../../../types/area';
 
 const playerStore = () => ({
     id: '#player',

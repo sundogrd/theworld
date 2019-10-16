@@ -13,8 +13,8 @@ let mainWindow: Electron.BrowserWindow;
 function createMainWindow() {
     // Construct new BrowserWindow
     mainWindow = new BrowserWindow({
-        minHeight: 671,
-        minWidth: 1192,
+        minHeight: 900,
+        minWidth: 1440,
         webPreferences: {
             nodeIntegration: true,
         },
