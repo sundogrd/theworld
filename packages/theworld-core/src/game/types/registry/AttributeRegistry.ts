@@ -1,6 +1,6 @@
-import Creature from './Creature';
+import Creature from '../Creature';
 
-type Attribute = {
+type AttributeRegistry = {
     key: string;
     name: string;
     // To make an attribute computed you add the 'formula' config with the
@@ -30,4 +30,4 @@ type Attribute = {
     };
 };
 
-export default Attribute;
+export default AttributeRegistry;

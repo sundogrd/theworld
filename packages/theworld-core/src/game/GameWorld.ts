@@ -8,7 +8,7 @@ import AreaRepository from './storage/AreaRepository';
 import Area from './types/Area';
 import Creature from './types/Creature';
 import Item from './types/Item';
-import {Tile} from  './types/docs/AreaDoc';
+import { Tile } from './types/docs/AreaDoc';
 import Action from './types/Action';
 
 export type GameWorldDB = {
@@ -28,13 +28,17 @@ export enum EResultType {
 
 // TODO: use union type for all of update types
 export type GameWorldUpdate = {
-    type: EResultType,
-    payload: any,
+    type: EResultType;
+    payload: any;
 };
 
-
 function isCreature(creature: Creature | Item | Tile): creature is Creature {
-    return 'gender' in creature && 'race' in creature && 'inventory' in creature && 'equipment' in creature;
+    return (
+        'gender' in creature &&
+        'race' in creature &&
+        'inventory' in creature &&
+        'equipment' in creature
+    );
 }
 
 function isItem(item: Creature | Item | Tile): item is Creature {
@@ -42,20 +46,31 @@ function isItem(item: Creature | Item | Tile): item is Creature {
 }
 
 function isTile(tile: Creature | Item | Tile): tile is Tile {
-    return 'placeable' in tile && 'moveable' in tile && 'origin' in tile && 'position' in tile;
+    return (
+        'placeable' in tile &&
+        'moveable' in tile &&
+        'origin' in tile &&
+        'position' in tile
+    );
 }
 
-
 // 具体的操作，应该产生updates更新world，这里先不管
-async function doAction(who: Creature, to: Creature | Item | Tile, action: Action, world: GameWorld): Promise<void>{
+async function doAction(
+    who: Creature,
+    to: Creature | Item | Tile,
+    action: Action,
+    world: GameWorld,
+): Promise<void> {
     if (isCreature(to)) {
-        console.log(`${who.name} do the action {${action.id}} to ${to.name}`)
+        console.log(`${who.name} do the action {${action.id}} to ${to.name}`);
     } else if (isItem(to)) {
-        console.log(`${who.name} do the action {${action.id}} to ${to.name}`)
+        console.log(`${who.name} do the action {${action.id}} to ${to.name}`);
     } else if (isTile(to)) {
-        console.log(`${who.name} do the action {${action.id}} to ${to.position.x}-${to.position.y}`)
+        console.log(
+            `${who.name} do the action {${action.id}} to ${to.position.x}-${to.position.y}`,
+        );
     } else {
-        throw new Error('')
+        throw new Error('');
     }
 
     if (action.check(this.world, who, to)) {
@@ -68,15 +83,13 @@ async function doAction(who: Creature, to: Creature | Item | Tile, action: Actio
     }
 }
 
-
-
 type ActionCommand = {
     actionId: string;
     target: Creature | Item | Tile;
 };
 
 class GameWorld {
-    static MAX_UPDATES_TIME: number = 10;
+    static MAX_UPDATES_TIME = 10;
     static MAX_ROUND: number = Number.MAX_SAFE_INTEGER;
     db: GameWorldDB;
     itemRepository: ItemRepository;
@@ -85,7 +98,7 @@ class GameWorld {
     creatureTemplateRepository: CreatureTemplateRepository;
     areaRepository: AreaRepository;
     store: Store;
-    private currentRound: number = 0;
+    private currentRound = 0;
 
     constructor(db: GameWorldDB) {
         this.db = db;
@@ -97,7 +110,9 @@ class GameWorld {
         this.areaRepository = new AreaRepository(this.db.areas);
 
         this.creatureRepository = new CreatureRepository(this.db.creatures);
-        this.creatureTemplateRepository = new CreatureTemplateRepository(this.db.creatureTemplates);
+        this.creatureTemplateRepository = new CreatureTemplateRepository(
+            this.db.creatureTemplates,
+        );
 
         this.store = new Store({
             itemRepository: this.itemRepository,
@@ -108,7 +123,7 @@ class GameWorld {
         });
     }
 
-    async getArea (areaId: string): Promise<Area> {
+    async getArea(areaId: string): Promise<Area> {
         return await this.store.getArea(areaId);
     }
 
@@ -135,14 +150,14 @@ class GameWorld {
     async getPlayer(): Promise<Creature> {
         // 假设玩家id都为#player
         const playerId = '#player';
-        return await this.getCreature(playerId)
+        return await this.getCreature(playerId);
     }
 
     async getAction(actionId: string): Promise<Action> {
         return await this.store.getAction(actionId);
     }
 
-    async getItem (itemId: string): Promise<Item> {
+    async getItem(itemId: string): Promise<Item> {
         return await this.store.getItem(itemId);
     }
     async getCreature(creatureId: string): Promise<Creature> {
@@ -152,7 +167,7 @@ class GameWorld {
     async run(): Promise<void> {
         // 加载世界对象状态
         // 时间开始流动 toki o wutokimasi
-        while(true) {
+        while (true) {
             await this.loopOnce();
         }
     }
@@ -165,13 +180,15 @@ class GameWorld {
         const player = await this.getPlayer();
         const extraAreas = await this.getExtraAreas();
 
-        const {creatures} = area;
+        const { creatures } = area;
 
-        const results = await Promise.all(Object.keys(creatures).map(async key => {
-            return await this.store.getCreature(key)
-        }));
+        const results = await Promise.all(
+            Object.keys(creatures).map(async key => {
+                return await this.store.getCreature(key);
+            }),
+        );
 
-        await this.updateCurrentArea(area, results, player)
+        await this.updateCurrentArea(area, results, player);
         await this.updateIdleAreas(extraAreas, player);
         await this.updateCreatures(results, player, area);
         await this.updatePlayer(player, area);
@@ -181,16 +198,16 @@ class GameWorld {
     }
 
     // applyWorldUpdates用于更新整个游戏世界状态的API，是事务的，有一个异常则回滚全部
-    applyWorldUpdates (updates: GameWorldUpdate[]): void {
-        let nowUpdateTime = 1;
+    applyWorldUpdates(updates: GameWorldUpdate[]): void {
+        const nowUpdateTime = 1;
         let records: GameWorldUpdate[] = [];
         try {
-            for(let update of updates) {
+            for (const update of updates) {
                 // 保存当前的回滚操作
                 records.unshift(this.getRevertUpdate(update));
-                this.applyWorldUpdate(update)
+                this.applyWorldUpdate(update);
             }
-        } catch(err) {
+        } catch (err) {
             console.log(err);
             // 回滚
             // 可能导致死循环，给定一个最大次数吧
@@ -203,7 +220,6 @@ class GameWorld {
             }
         }
     }
-
 
     // 根据update生成
     // TODO: 具体的实现逻辑
@@ -227,7 +243,7 @@ class GameWorld {
 
     // 返回一个新的世界状态就行了
     applyWorldUpdate(update: GameWorldUpdate): void {
-        switch(update.type) {
+        switch (update.type) {
             case EResultType.Message: {
                 console.log('update messge is ', update.payload);
                 break;
@@ -244,38 +260,42 @@ class GameWorld {
         }
     }
 
-
     // 更新当前area 应该是私有的，一般不对外暴露
-    private async updateCurrentArea(curArea: Area, creatures: Creature[], player: Creature): Promise<void> {
+    private async updateCurrentArea(
+        curArea: Area,
+        creatures: Creature[],
+        player: Creature,
+    ): Promise<void> {
         // 当前area
         creatures.forEach(creature => {
-            this.triggerCreatureDead(creature, curArea)
-            this.triggerCreatureLeave(creature, curArea)
-        })
+            this.triggerCreatureDead(creature, curArea);
+            this.triggerCreatureLeave(creature, curArea);
+        });
         this.triggerTimeUpdate(curArea);
     }
 
-
-    private async updateIdleAreas(idleAreas: Area[], player: Creature): Promise<void> {
+    private async updateIdleAreas(
+        idleAreas: Area[],
+        player: Creature,
+    ): Promise<void> {
         // 所有idle area 都触发
         idleAreas.forEach(area => {
             this.triggerIdleArea(area, player, this);
-        })
+        });
     }
 
     async updatePlayer(player: Creature, area: Area): Promise<void> {
         if (this.canApplyThisTurn(player)) {
             let action = this.getSignal(player, area);
-            while(!action) {
+            while (!action) {
                 action = this.getSignal(player, area);
             }
             // 只有接受到了命令才继续往下走
-            const {actionId, target} = action;
+            const { actionId, target } = action;
             const rAction: Action = await this.getAction(actionId);
-            doAction(player, target, rAction, this)
+            doAction(player, target, rAction, this);
         }
     }
-
 
     private canApplyThisTurn(creature: Creature) {
         if (creature.nextTurn === this.currentRound) {
@@ -284,21 +304,29 @@ class GameWorld {
         return false;
     }
 
-      // TODO
-    private triggerIdleArea(area: Area, player: Creature, world: GameWorld) {
+    // TODO
+    private triggerIdleArea(area: Area, player: Creature, world: GameWorld) {}
 
-    }
-
-    private async updateCreatures(creatures: Creature[], player: Creature, area: Area): Promise<void> {
-        creatures.filter(c => c.id !== player.id).forEach(async c => {
-            await this.dealWithCreature(c, player, area)
-        })
+    private async updateCreatures(
+        creatures: Creature[],
+        player: Creature,
+        area: Area,
+    ): Promise<void> {
+        creatures
+            .filter(c => c.id !== player.id)
+            .forEach(async c => {
+                await this.dealWithCreature(c, player, area);
+            });
     }
 
     // 每个creature做该回合要做的事
-    async dealWithCreature(creature: Creature, player: Creature, area: Area): Promise<void> {
+    async dealWithCreature(
+        creature: Creature,
+        player: Creature,
+        area: Area,
+    ): Promise<void> {
         if (this.canApplyThisTurn(creature)) {
-            const nextAction = creature.think(this, player, creature)
+            const nextAction = creature.think(this, player, creature);
             const rAction: Action = await this.getAction(nextAction.actionId);
             doAction(creature, nextAction.target, rAction, this);
         }
@@ -309,37 +337,43 @@ class GameWorld {
         // 接受信号
         const rand = Math.random();
         console.log('rand is: ', rand);
-        return rand  < 0.001 ? {
-            actionId: 'turn-north',
-            target: player
-        } : null;
+        return rand < 0.001
+            ? {
+                actionId: 'turn-north',
+                target: player,
+            }
+            : null;
     }
 
     // 触发生物离开操作
     triggerCreatureLeave(creature: Creature, area: Area): void {
-        const {areaManagers} = area;
+        const { areaManagers } = area;
         const updates: GameWorldUpdate[] = [];
         areaManagers.forEach(manager => {
-            updates.push(manager['onCreatureLeave'].call(area, this, creature, area));
-        })
+            updates.push(
+                manager['onCreatureLeave'].call(area, this, creature, area),
+            );
+        });
         this.applyWorldUpdates(updates);
     }
 
     triggerCreatureDead(creature: Creature, area: Area): void {
-        const {areaManagers} = area;
+        const { areaManagers } = area;
         const updates: GameWorldUpdate[] = [];
         areaManagers.forEach(manager => {
-            updates.push(manager['onCreatureDead'].call(area, this, creature, area));
-        })
+            updates.push(
+                manager['onCreatureDead'].call(area, this, creature, area),
+            );
+        });
         this.applyWorldUpdates(updates);
     }
 
     triggerTimeUpdate(area: Area): void {
-        const {areaManagers} = area;
+        const { areaManagers } = area;
         const updates: GameWorldUpdate[] = [];
         areaManagers.forEach(manager => {
             updates.push(manager['onTimeUpdate'].call(area, this, area));
-        })
+        });
         this.applyWorldUpdates(updates);
     }
 }

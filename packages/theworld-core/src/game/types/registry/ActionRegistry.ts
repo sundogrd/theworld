@@ -1,9 +1,9 @@
-import GameWorld, { GameWorldUpdate } from '../GameWorld';
-import Creature from '../types/Creature';
-import Item from '../types/Item';
-import { Tile } from '../types/docs/AreaDoc';
+import GameWorld, { GameWorldUpdate } from '@/game/GameWorld';
+import Creature from '../Creature';
+import Item from '../Item';
+import { Tile } from '../docs/AreaDoc';
 
-type Action = {
+type ActionRegistry = {
     id: string;
     name: string;
     timeSpend: (
@@ -23,4 +23,4 @@ type Action = {
     ) => Array<GameWorldUpdate> | null;
 };
 
-export default Action;
+export default ActionRegistry;
