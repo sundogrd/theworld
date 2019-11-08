@@ -37,12 +37,12 @@ class World {
         });
 
         this.db.itemTemplates = new Datastore({
-            filename: path.resolve(this.worldDir, './itemTemplates.db')
-        })
+            filename: path.resolve(this.worldDir, './itemTemplates.db'),
+        });
 
         this.db.creatureTemplates = new Datastore({
-            filename: path.resolve(this.worldDir, './creatureTemplates.db')
-        })
+            filename: path.resolve(this.worldDir, './creatureTemplates.db'),
+        });
 
         this.gameWorld = new GameWorld(this.db);
     }
