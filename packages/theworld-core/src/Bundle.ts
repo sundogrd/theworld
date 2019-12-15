@@ -19,6 +19,13 @@ enum EBundleHook {
     AfterLoaded = 'afterLoaded',
 }
 
+type BundleDescriptor = {
+    version: string; // 0.0.1
+    requires: {
+        [bundle: string]: string; // "fantasy-base-bundle": "^0.0.1"
+    };
+};
+
 class Bundle {
     items: {
         [itemId: string]: ItemDoc;
@@ -48,8 +55,14 @@ class Bundle {
         afterLoaded: [],
     };
 
+    private descriptor: BundleDescriptor;
+
+    constructor(bundleDescriptor: BundleDescriptor) {
+        this.descriptor = bundleDescriptor;
+    }
+
     // 本来是想直接用Doc的，但Doc和注册的结构还不太一样，所以加了个Registry的概念，对Bundle开发者隔离Doc这个概念
-    registerItem(itemRegistry: ItemRegistry): void {
+    public registerItem(itemRegistry: ItemRegistry): void {
         if (this.items[itemRegistry.id]) {
             throw new Error('item has already been registered');
         }
@@ -63,7 +76,7 @@ class Bundle {
             meta: itemRegistry.meta,
         };
     }
-    registerI18n(i18nRegistry: I18nRegistry): void {
+    public registerI18n(i18nRegistry: I18nRegistry): void {
         if (this.i18n[i18nRegistry.languageCode]) {
             throw new Error('i18n for this bundle has already been registered');
         }
@@ -72,7 +85,9 @@ class Bundle {
             texts: i18nRegistry.texts,
         };
     }
-    registerItemTemplate(itemTemplateRegistry: ItemTemplateRegistry): void {
+    public registerItemTemplate(
+        itemTemplateRegistry: ItemTemplateRegistry,
+    ): void {
         if (this.itemTemplates[itemTemplateRegistry.id]) {
             throw new Error('itemTemplate has already been registered');
         }
@@ -82,7 +97,7 @@ class Bundle {
             createScript: itemTemplateRegistry.create.toString(),
         };
     }
-    registerCreature(creatureRegistry: CreatureRegistry): void {
+    public registerCreature(creatureRegistry: CreatureRegistry): void {
         if (this.creatures[creatureRegistry.id]) {
             throw new Error('creature has already been registered');
         }
@@ -113,7 +128,7 @@ class Bundle {
         };
     }
 
-    registerCreatureTemplate(
+    public registerCreatureTemplate(
         creatureTemplateRegistry: CreatureTemplateRegistry,
     ): void {
         if (this.creatureTemplates[creatureTemplateRegistry.id]) {
@@ -126,7 +141,7 @@ class Bundle {
         };
     }
 
-    registerAttribute(attributeRegistry: AttributeRegistry): void {
+    public registerAttribute(attributeRegistry: AttributeRegistry): void {
         if (this.attributes[attributeRegistry.name]) {
             throw new Error(
                 `attribute ${attributeRegistry.name} has already been registered`,
@@ -146,7 +161,7 @@ class Bundle {
         };
     }
 
-    registerAction(actionRegistry: ActionRegistry): void {
+    public registerAction(actionRegistry: ActionRegistry): void {
         if (this.actions[actionRegistry.id]) {
             throw new Error(
                 `action '${actionRegistry.id}' has already been registered`,
@@ -162,7 +177,7 @@ class Bundle {
     }
 
     // 用于bundle加载过程中的hook，包括World部分时候
-    onHook(hook: EBundleHook, scriptFunc: BundleHookScript): void {
+    public onHook(hook: EBundleHook, scriptFunc: BundleHookScript): void {
         this.hooksScripts[hook].push(scriptFunc);
     }
 }

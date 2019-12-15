@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as Datastore from 'nedb';
 import * as WebSocket from 'ws';
 import GameWorld from './game/GameWorld';
+import Server, { EServerEvent } from './Server';
 // the class take responsibility for everything the player do and display
 class World {
     worldDir: string;
@@ -13,12 +14,31 @@ class World {
         creatureTemplates: Datastore;
     };
     gameWorld: GameWorld;
+    server: Server;
+
     wss?: WebSocket.Server;
     constructor(worldDir: any) {
         this.worldDir = path.resolve(worldDir);
     }
+
     /**
-     * 加载游戏文件夹
+     * 初始化游戏世界，在worldDir中生成文件
+     *
+     * @memberof World
+     */
+    init(bundles: { [bundle: string]: string }): void {
+        console.log(this.worldDir);
+        // TODO: 判断当前worldDir未被初始化s
+
+        // TODO: 拉npm包？
+
+        // TODO: 放置于worldDir的packages文件夹？
+
+        // TODO: 执行bundle初始化并保存到worldDir中的各个db文件中.
+    }
+
+    /**
+     * 加载历史游戏文件夹
      *
      * @memberof World
      */
@@ -51,12 +71,9 @@ class World {
         if (this.wss) {
             throw new Error('This method is already run before');
         }
-        this.wss = new WebSocket.Server({ port: port || 4434 });
-        this.wss.on('connection', function connection(ws: any) {
-            ws.on('message', function incoming(message: string) {
-                console.log('received: %s', message);
-            });
-            ws.send('something');
+        this.server = new Server(port);
+        this.server.on(EServerEvent.ON_PLAYER_ACTION, () => {
+            // TODO: 处理事件，调用gameWorld方法
         });
     }
 }
