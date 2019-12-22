@@ -11,13 +11,19 @@
   "dependencies": {
     "events": "^3.0.0",
     "nedb": "^1.8.0",
+    "package-json": "^6.5.0",
+    "request": "^2.88.0",
+    "tar": "^5.0.5",
     "winston": "^3.2.1",
     "ws": "^7.1.2"
   },
   "devDependencies": {
+    "@types/fs-extra": "^8.0.1",
     "@types/jest": "^24.0.18",
     "@types/nedb": "^1.8.9",
     "@types/node": "^12.7.3",
+    "@types/request": "^2.48.4",
+    "@types/tar": "^4.0.3",
     "@types/ws": "^6.0.3",
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.4.0",
