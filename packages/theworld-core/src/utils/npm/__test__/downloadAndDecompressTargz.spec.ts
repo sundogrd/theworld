@@ -9,10 +9,13 @@ describe('donwloadAndDecompressTargz', () => {
     // });
 
     describe('#base', () => {
-        it('download codesmith', () => {
-            donwloadAndDecompressTargz(
-                'https://registry.npm.taobao.org/codesmith/download/codesmith-1.0.0.tgz',
-                path.resolve('./temp'),
+        //  jest src/utils/npm/__test__/downloadAndDecompressTargz.spec.ts
+        it('download codesmith', async () => {
+            jest.setTimeout(10000);
+            console.log('path: ', path.resolve(__dirname, './temp'));
+            await donwloadAndDecompressTargz(
+                'https://registry.npm.taobao.org/package-json/download/package-json-6.5.0.tgz',
+                path.resolve(__dirname, './temp'),
             );
         });
     });
