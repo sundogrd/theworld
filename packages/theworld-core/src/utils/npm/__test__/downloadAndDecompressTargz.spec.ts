@@ -12,7 +12,10 @@ describe('donwloadAndDecompressTargz', () => {
         //  jest src/utils/npm/__test__/downloadAndDecompressTargz.spec.ts
         it('download codesmith', async () => {
             jest.setTimeout(10000);
-            console.log('path: ', path.resolve(__dirname, './temp'));
+            console.log(
+                'path: ',
+                path.resolve(__dirname, './donwloadAndDecompressTargz-temp'),
+            );
             await donwloadAndDecompressTargz(
                 'https://registry.npm.taobao.org/package-json/download/package-json-6.5.0.tgz',
                 path.resolve(__dirname, './temp'),

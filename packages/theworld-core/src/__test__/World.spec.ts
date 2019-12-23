@@ -1,6 +1,7 @@
-import World from '../World';
 import * as assert from 'assert';
+import * as fse from 'fs-extra';
 import * as path from 'path';
+import World from '../World';
 
 describe('World top API', () => {
     // let attribute = null;
@@ -10,13 +11,20 @@ describe('World top API', () => {
     // });
 
     describe('#World.init', () => {
-        it('init simple world', () => {
-            const world = new World(
-                path.resolve('../../examples/simple-world'),
-            );
-            world.init({
+        it('init simple world', async () => {
+            const world = new World(path.resolve(__dirname, 'temp-world'));
+            await world.init({
                 codesmith: '1.1.0',
             });
+            try {
+                await fse.access(
+                    path.resolve(__dirname, 'temp-world', 'world.json'),
+                );
+            } catch (e) {
+                throw e;
+            } finally {
+                await fse.remove(path.resolve(__dirname, 'temp-world'));
+            }
         });
     });
 });

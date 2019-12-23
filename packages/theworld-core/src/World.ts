@@ -55,7 +55,7 @@ class World {
             throw new Error('Wobundlesrld has already inited');
         }
 
-        // 拉npm包并解压到`${this.worldDir}/${bundlePkg}`
+        // 拉npm包并解压到`${this.worldDir}/bundle-packages/${bundlePkg}`
         await Promise.all(
             Object.keys(bundles).map(async bundlePkg => {
                 const tarballUrl = await getNpmTarballUrl(
@@ -64,12 +64,21 @@ class World {
                 );
                 await downloadAndDecompressTargz(
                     tarballUrl,
-                    `${this.worldDir}/${bundlePkg}`,
+                    `${this.worldDir}/bundle-packages/${bundlePkg}`,
                 );
             }),
         );
 
-        // TODO: 执行bundle初始化并保存到worldDir中的各个db文件中.
+        // TODO: 执行bundle初始化并保存到worldDir中的各个db文件中
+
+
+        // 写入 world.json 内容
+        await fse.writeFile(
+            `${this.worldDir}/world.json`,
+            JSON.stringify({
+                bundles: bundles,
+            }),
+        );
         this.logger.info('world inited');
     }
 
