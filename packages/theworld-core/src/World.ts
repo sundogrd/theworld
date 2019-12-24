@@ -1,7 +1,19 @@
 import * as path from 'path';
 import * as Datastore from 'nedb';
 import * as WebSocket from 'ws';
+import * as fse from 'fs-extra';
+import * as winston from 'winston';
 import GameWorld from './game/GameWorld';
+import downloadAndDecompressTargz from './utils/npm/donwloadAndDecompressTargz';
+import getNpmTarballUrl from './utils/npm/getNpmTarballUrl';
+import Server, { EServerEvent } from './Server';
+
+const theworldLogFormat = winston.format.printf(
+    ({ level, message, label, timestamp }) => {
+        return `${timestamp} [${label}] ${level}: ${message}`;
+    },
+);
+
 // the class take responsibility for everything the player do and display
 class World {
     worldDir: string;
@@ -13,12 +25,65 @@ class World {
         creatureTemplates: Datastore;
     };
     gameWorld: GameWorld;
+    server: Server;
+    logger: winston.Logger;
+
     wss?: WebSocket.Server;
-    constructor(worldDir: any) {
+    constructor(worldDir: string) {
         this.worldDir = path.resolve(worldDir);
+        this.logger = winston.createLogger({
+            format: winston.format.combine(
+                winston.format.timestamp(),
+                theworldLogFormat,
+            ),
+            transports: [new winston.transports.Console()],
+        });
     }
+
     /**
-     * 加载游戏文件夹
+     * 初始化游戏世界，在worldDir中生成文件
+     *
+     * @memberof World
+     */
+    async init(bundles: { [bundle: string]: string }): Promise<void> {
+        this.logger.info('start init world');
+        await fse.ensureDir(this.worldDir);
+        // 判断当前worldDir未被初始化
+        const worldJsonPath = path.resolve(this.worldDir, './world.json');
+        const hasWorldJson = await fse.pathExists(worldJsonPath);
+        if (hasWorldJson) {
+            throw new Error('Wobundlesrld has already inited');
+        }
+
+        // 拉npm包并解压到`${this.worldDir}/bundle-packages/${bundlePkg}`
+        await Promise.all(
+            Object.keys(bundles).map(async bundlePkg => {
+                const tarballUrl = await getNpmTarballUrl(
+                    bundlePkg,
+                    bundles[bundlePkg],
+                );
+                await downloadAndDecompressTargz(
+                    tarballUrl,
+                    `${this.worldDir}/bundle-packages/${bundlePkg}`,
+                );
+            }),
+        );
+
+        // TODO: 执行bundle初始化并保存到worldDir中的各个db文件中
+
+
+        // 写入 world.json 内容
+        await fse.writeFile(
+            `${this.worldDir}/world.json`,
+            JSON.stringify({
+                bundles: bundles,
+            }),
+        );
+        this.logger.info('world inited');
+    }
+
+    /**
+     * 加载历史游戏文件夹
      *
      * @memberof World
      */
@@ -51,12 +116,9 @@ class World {
         if (this.wss) {
             throw new Error('This method is already run before');
         }
-        this.wss = new WebSocket.Server({ port: port || 4434 });
-        this.wss.on('connection', function connection(ws: any) {
-            ws.on('message', function incoming(message: string) {
-                console.log('received: %s', message);
-            });
-            ws.send('something');
+        this.server = new Server(port);
+        this.server.on(EServerEvent.ON_PLAYER_ACTION, () => {
+            // TODO: 处理事件，调用gameWorld方法
         });
     }
 }
