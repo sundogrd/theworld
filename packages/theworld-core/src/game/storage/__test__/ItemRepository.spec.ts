@@ -24,8 +24,7 @@ describe('Item Repository test', () => {
                 description: '坏掉的苹果，可少量回复生命值',
                 // Array of body part
                 equipable: [],
-                template_id: null
-        
+                templateId: null,
             });
         });
     });

@@ -142,7 +142,7 @@ module.exports = {
     description: "the production tool for lwio";
     // Array of body part
     equipable: ["right-hand", "left-hand"];
-    template_id: null;
+    templateId: null;
     meta: {
         remainPower: 100,
     }

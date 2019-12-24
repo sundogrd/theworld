@@ -3,8 +3,7 @@ export type ItemRegistry = {
     name: string;
     description: string;
     // Array of body part
-    equipable: Array<string>;
-    template_id: string;
+    templateId: string;
     meta: {
         [metaKey: string]: any;
     };

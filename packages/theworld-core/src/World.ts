@@ -70,7 +70,12 @@ class World {
         );
 
         // TODO: 执行bundle初始化并保存到worldDir中的各个db文件中
+        for await (const bundlePkg of Object.keys(bundles)) {
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const pkgDirPath = require(`${this.worldDir}/bundle-packages/${bundlePkg}`);
 
+            // TODO: 对每个package加载完后的数据完整性进行check，比如某个creature的template是错误的
+        }
 
         // 写入 world.json 内容
         await fse.writeFile(
