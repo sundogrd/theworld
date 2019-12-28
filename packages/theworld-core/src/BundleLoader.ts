@@ -13,6 +13,7 @@ import CreatureTemplateRegistry from './game/types/registry/CreatureTemplateRegi
 import AttributeRegistry from './game/types/registry/AttributeRegistry';
 import AttributeDoc from './game/types/docs/AttributeDoc';
 import ActionRegistry from './game/types/registry/ActionRegistry';
+import AreaRegistry from './game/types/registry/AreaRegistry';
 import ActionDoc from './game/types/docs/ActionDoc';
 
 // Loader for load resource for game
@@ -31,42 +32,69 @@ class BundleLoader {
     };
     constructor(worldDir: string) {
         this.worldDir = worldDir;
-        this.db.i18n = new Datastore({
-            filename: path.resolve(this.worldDir, './i18n.db'),
-            autoload: true,
-        });
-        this.db.items = new Datastore({
-            filename: path.resolve(this.worldDir, './items.db'),
-            autoload: true,
-        });
-        this.db.creatures = new Datastore({
-            filename: path.resolve(this.worldDir, './creatures.db'),
-            autoload: true,
-        });
-        this.db.areas = new Datastore({
-            filename: path.resolve(this.worldDir, './areas.db'),
-            autoload: true,
-        });
-
-        this.db.itemTemplates = new Datastore({
-            filename: path.resolve(this.worldDir, './itemTemplates.db'),
-        });
-
-        this.db.creatureTemplates = new Datastore({
-            filename: path.resolve(this.worldDir, './creatureTemplates.db'),
-        });
-        this.db.actions = new Datastore({
-            filename: path.resolve(this.worldDir, './actions.db'),
-        });
-        this.db.attributes = new Datastore({
-            filename: path.resolve(this.worldDir, './attributes.db'),
-        });
+        fse.removeSync(path.resolve(this.worldDir, './i18n.db'));
+        fse.removeSync(path.resolve(this.worldDir, './items.db'));
+        fse.removeSync(path.resolve(this.worldDir, './creatures.db'));
+        fse.removeSync(path.resolve(this.worldDir, './areas.db'));
+        fse.removeSync(path.resolve(this.worldDir, './itemTemplates.db'));
+        fse.removeSync(path.resolve(this.worldDir, './creatureTemplates.db'));
+        fse.removeSync(path.resolve(this.worldDir, './actions.db'));
+        fse.removeSync(path.resolve(this.worldDir, './attributes.db'));
+        this.db = {
+            i18n: new Datastore({
+                filename: path.resolve(this.worldDir, './i18n.db'),
+                autoload: true,
+            }),
+            items: new Datastore({
+                filename: path.resolve(this.worldDir, './items.db'),
+                autoload: true,
+            }),
+            creatures: new Datastore({
+                filename: path.resolve(this.worldDir, './creatures.db'),
+                autoload: true,
+            }),
+            areas: new Datastore({
+                filename: path.resolve(this.worldDir, './areas.db'),
+                autoload: true,
+            }),
+            itemTemplates: new Datastore({
+                filename: path.resolve(this.worldDir, './itemTemplates.db'),
+                autoload: true,
+            }),
+            creatureTemplates: new Datastore({
+                filename: path.resolve(this.worldDir, './creatureTemplates.db'),
+                autoload: true,
+            }),
+            actions: new Datastore({
+                filename: path.resolve(this.worldDir, './actions.db'),
+                autoload: true,
+            }),
+            attributes: new Datastore({
+                filename: path.resolve(this.worldDir, './attributes.db'),
+                autoload: true,
+            }),
+        };
     }
 
     public async loadBundle(bundlePkg: string): Promise<void> {
         const bundleDirPath = `${this.worldDir}/bundle-packages/${bundlePkg}`;
         // check dir path
         await fse.access(bundleDirPath);
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const pkg = require(`${bundleDirPath}/index.js`);
+        if (!pkg.init) {
+            throw new Error(`package ${bundlePkg} hasn't 'init' method`);
+        }
+        await pkg.init({
+            loadI18n: this.loadI18n.bind(this),
+            loadItem: this.loadItem.bind(this),
+            loadArea: this.loadArea.bind(this),
+            loadItemTemplate: this.loadItemTemplate.bind(this),
+            loadCreature: this.loadCreature.bind(this),
+            loadCreatureTemplate: this.loadCreatureTemplate.bind(this),
+            loadAction: this.loadAction.bind(this),
+            loadAttribute: this.loadAttribute.bind(this),
+        });
     }
 
     private async loadI18n(
@@ -79,7 +107,7 @@ class BundleLoader {
                 return new Promise((resolve, reject) => {
                     this.db.i18n.insert(
                         {
-                            key: 'i18nKey',
+                            key: i18nKey,
                             languageCode: languageCode,
                             value: keyMap[i18nKey],
                         },
@@ -95,6 +123,9 @@ class BundleLoader {
             }),
         );
     }
+    private loadArea(_areaRegistry: AreaRegistry): Promise<void> {
+        throw new Error('not implemented');
+    }
     private loadItem(itemRegistry: ItemRegistry): Promise<void> {
         return new Promise((resolve, reject) => {
             this.db.itemTemplates.findOne(
@@ -102,6 +133,7 @@ class BundleLoader {
                 (err, doc: ItemTemplateDoc) => {
                     if (err) {
                         reject(err);
+                        return;
                     }
                     if (doc === null) {
                         reject(
@@ -109,6 +141,7 @@ class BundleLoader {
                                 `no template for templateId ${itemRegistry.templateId}`,
                             ),
                         );
+                        return;
                     }
                     this.db.items.insert(
                         {
@@ -159,6 +192,7 @@ class BundleLoader {
                 (err: Error, doc: CreatureTemplateDoc) => {
                     if (err) {
                         reject(err);
+                        return;
                     }
                     if (doc === null) {
                         reject(
@@ -166,6 +200,7 @@ class BundleLoader {
                                 `no template for templateId ${creatureRegistry.templateId}`,
                             ),
                         );
+                        return;
                     }
                     this.db.creatures.insert(
                         {
