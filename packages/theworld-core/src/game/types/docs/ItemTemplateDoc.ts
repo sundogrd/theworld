@@ -1,6 +1,7 @@
 type ItemTemplateDoc = {
-    id: string;
-    name: string; // like sword_template
+    id: string; // like sword_template
+    name: string;
+    equipable: Array<string>;
     createScript: string;
 };
 

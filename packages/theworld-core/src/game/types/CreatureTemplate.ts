@@ -11,6 +11,7 @@ export type CreatureTemplateCreateSource = {
 type CreatureTemplate = {
     id: string;
     name: string; // like rat_template
+    race: string;
     create: (
         world: GameWorld,
         source: CreatureTemplateCreateSource,

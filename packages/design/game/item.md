@@ -32,7 +32,7 @@ type ItemDoc = {
     description: string;
     // Array of body part
     equipable: Array<string>;
-    template_id: string;
+    templateId: string;
     meta: {
         [metaKey]: any;
     }

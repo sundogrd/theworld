@@ -9,7 +9,6 @@ type CreatureRegistry = {
     name: string;
     description: string;
     gender: ECreatureGender;
-    race: string;
     inventory: {
         maxItem: number;
     };
@@ -26,7 +25,6 @@ type CreatureRegistry = {
     attributes: {
         [attributeKey: string]: any;
     };
-    isAlive: boolean; // false if the creature is dead. :)
     think: (
         world: GameWorld,
         player: Creature,

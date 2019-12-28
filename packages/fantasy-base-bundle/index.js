@@ -1,15 +1,14 @@
-const Bundle = require('theworld-core').Bundle;
 const path = require('path');
 const fse = require('fs-extra');
 
-async function registerI18n() {
+async function registerI18n(loader) {
     const i18nDirectories = fse
         .readdirSync(path.resolve('./i18n'), { withFileTypes: true })
         .filter(dirent => dirent.isDirectory());
 
     await Promise.all(
         i18nDirectories.map(async dir => {
-            await Bundle.registerI18n(
+            await loader.registerI18n(
                 dir.name,
                 require(path.resolve('./i18n', dir.name, 'index.js')),
             );
@@ -17,7 +16,7 @@ async function registerI18n() {
     );
 }
 
-async function registerItems() {
+async function registerItems(loader) {
     // register items
     const itemDirectories = fse
         .readdirSync(path.resolve('./items/items'), { withFileTypes: true })
@@ -25,7 +24,7 @@ async function registerItems() {
 
     await Promise.all(
         itemDirectories.map(async dir => {
-            await Bundle.registerItem(
+            await loader.registerItem(
                 require(path.resolve('./items/items', dir.name, 'index.js')),
             );
         }),
@@ -37,14 +36,14 @@ async function registerItems() {
         .filter(dirent => !dirent.isDirectory());
     await Promise.all(
         templateFiles.map(async file => {
-            await Bundle.registerItemTemplate(
+            await loader.registerItemTemplate(
                 require(path.resolve('./items/templates', dir.name)),
             );
         }),
     );
 }
 
-async function registerCreatures() {
+async function registerCreatures(loader) {
     // register items
     const itemDirectories = fse
         .readdirSync(path.resolve('./items/items'), { withFileTypes: true })
@@ -52,7 +51,7 @@ async function registerCreatures() {
 
     await Promise.all(
         itemDirectories.map(async dir => {
-            await Bundle.registerItem(
+            await loader.registerItem(
                 require(path.resolve('./items/items', dir.name, 'index.js')),
             );
         }),
@@ -64,14 +63,14 @@ async function registerCreatures() {
         .filter(dirent => !dirent.isDirectory());
     await Promise.all(
         templateFiles.map(async file => {
-            await Bundle.registerItemTemplate(
+            await loader.registerItemTemplate(
                 require(path.resolve('./items/templates', file.name)),
             );
         }),
     );
 }
 
-async function registerAttributes() {
+async function registerAttributes(loader) {
     // register items
     const attributesDirectories = fse
         .readdirSync(path.resolve('./attributes'), { withFileTypes: true })
@@ -79,7 +78,7 @@ async function registerAttributes() {
 
     await Promise.all(
         attributesDirectories.map(async dir => {
-            await Bundle.registerItem(
+            await loader.registerItem(
                 dir.name,
                 require(path.resolve('./attributes', dir.name, 'index.js')),
             );
@@ -87,14 +86,14 @@ async function registerAttributes() {
     );
 }
 
-async function registerActions() {
+async function registerActions(loader) {
     const actionDirectories = fse
         .readdirSync(path.resolve('./actions'), { withFileTypes: true })
         .filter(dirent => dirent.isDirectory());
 
     await Promise.all(
         actionDirectories.map(async dir => {
-            await Bundle.registerItem(
+            await loader.registerItem(
                 dir.name,
                 require(path.resolve('./actions', dir.name, 'index.js')),
             );
@@ -102,12 +101,14 @@ async function registerActions() {
     );
 }
 
+const init = async loader => {
+    await registerI18n(loader);
+    await registerActions(loader);
+    await registerAttributes(loader);
+    await registerItems(loader);
+    await registerCreatures(loader);
+};
+
 module.exports = {
-    init: () => {
-        registerI18n();
-        registerActions();
-        registerAttributes();
-        registerItems();
-        registerCreatures();
-    },
+    init: init,
 };

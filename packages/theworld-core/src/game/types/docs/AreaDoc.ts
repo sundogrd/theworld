@@ -9,6 +9,7 @@ export type Tile = {
         direction: EDirection;
     };
     placeable: boolean;
+    // TODO: using mask code for movable
     moveable: boolean; // whether creature can move through the tile
     origin: string; // origin type if place by something, for restore if the thing remove.
     meta: any;
