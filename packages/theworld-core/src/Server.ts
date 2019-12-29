@@ -1,24 +1,29 @@
 import * as WebSocket from 'ws';
 import * as EventEmitter from 'eventemitter3';
+import * as uuidv4 from 'uuid/v4';
 
 export enum EServerEvent {
     ON_PLAYER_ACTION = 'on-player-action',
+    CONNECTED = 'connected',
+    ON_NEW_MESSAGE = 'on-new-message',
 }
 
 type TheWorldClientMessage = {};
 
 class Server {
     wss: WebSocket.Server;
-    ws: WebSocket;
     emitter: EventEmitter;
+    connection: WebSocket;
 
     constructor(port?: number) {
         this.wss = new WebSocket.Server({ port: port || 4434 });
         this.wss.on('connection', (ws: WebSocket) => {
-            this.ws = ws;
-            ws.on('message', () => {
+            ws.on('message', message => {
                 // TODO: 处理消息并触发emitter
+                this.emitter.emit(EServerEvent.ON_NEW_MESSAGE, message);
             });
+            this.connection = ws;
+            this.emitter.emit(EServerEvent.CONNECTED, ws);
         });
         this.emitter = new EventEmitter();
     }
@@ -33,7 +38,10 @@ class Server {
 
     public sendUpdateWorld(): void {
         // TODO: 补全send逻辑和结构
-        this.ws.send(JSON.stringify({}));
+        if (!this.connection) {
+            throw new Error('connect has not established');
+        }
+        this.connection.send(JSON.stringify({}));
     }
 }
 export default Server;
