@@ -142,10 +142,32 @@ async function registerActions(loader) {
     );
 }
 
+async function registerArea(loader) {
+    const areaDirectories = fse
+        .readdirSync(path.resolve(__dirname, './areas'), {
+            withFileTypes: true,
+        })
+        .filter(dirent => dirent.isDirectory());
+
+    await Promise.all(
+        areaDirectories.map(async dir => {
+            await loader.loadArea(
+                require(path.resolve(
+                    __dirname,
+                    './areas',
+                    dir.name,
+                    'index.js',
+                )),
+            );
+        }),
+    );
+}
+
 const init = async loader => {
     await registerI18n(loader);
     await registerActions(loader);
     await registerAttributes(loader);
+    await registerArea(loader);
     await registerItems(loader);
     await registerCreatures(loader);
 };

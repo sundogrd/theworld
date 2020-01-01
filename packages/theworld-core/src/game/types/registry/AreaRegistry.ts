@@ -1,4 +1,5 @@
 import { Tile } from '../docs/AreaDoc';
+import { AreaManager } from '../Area';
 
 type AreaRegistry = {
     id: string;
@@ -7,16 +8,10 @@ type AreaRegistry = {
     creatures: Array<string>;
     items: Array<string>;
     // where developer register logic into this place.
-    // areaManagers: Array<{
-    //     id: string;
-    //     onTimeUpdateScript: string;
-    //     onCreatureLeaveScript: string;
-    //     onCreatureDeadScript: string;
-    //     onIdleScript: string;
-    // }>;
+    areaManagers: Array<AreaManager>;
     meta: {
         [metaKey: string]: any;
     };
 };
 
-export default AreaDoc;
+export default AreaRegistry;

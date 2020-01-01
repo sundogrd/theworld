@@ -1,18 +1,24 @@
 import * as Datastore from 'nedb';
+import * as EventEmitter from 'eventemitter3';
 import ItemRepository from './storage/ItemRepository';
 import Store from './storage/Store';
 import ItemTemplateRepository from './storage/ItemTemplateRepository';
 import CreatureRepository from './storage/CreatureRepository';
 import CreatureTemplateRepository from './storage/CreatureTemplateRepository';
+import ActionRepository from './storage/ActionRepository';
 import AreaRepository from './storage/AreaRepository';
+import AttributeRepository from './storage/AttributeRepository';
 import Area from './types/Area';
 import Creature from './types/Creature';
 import Item from './types/Item';
 import { Tile } from './types/docs/AreaDoc';
 import Action from './types/Action';
+import * as winston from 'winston';
 
 export type GameWorldDB = {
     items: Datastore;
+    actions: Datastore;
+    attributes: Datastore;
     itemTemplates: Datastore;
     creatures: Datastore;
     areas: Datastore;
@@ -92,16 +98,22 @@ class GameWorld {
     static MAX_UPDATES_TIME = 10;
     static MAX_ROUND: number = Number.MAX_SAFE_INTEGER;
     db: GameWorldDB;
+    logger?: winston.Logger;
     itemRepository: ItemRepository;
     itemTemplateRepository: ItemTemplateRepository;
     creatureRepository: CreatureRepository;
     creatureTemplateRepository: CreatureTemplateRepository;
     areaRepository: AreaRepository;
+    actionRepository: ActionRepository;
+    attributeRepository: AttributeRepository;
     store: Store;
+    emitter: EventEmitter;
     private currentRound = 0;
 
-    constructor(db: GameWorldDB) {
+    constructor(db: GameWorldDB, logger: winston.Logger) {
+        this.emitter = new EventEmitter();
         this.db = db;
+        this.logger = logger;
         this.itemRepository = new ItemRepository(this.db.items);
         this.itemTemplateRepository = new ItemTemplateRepository(
             this.db.itemTemplates,
@@ -113,6 +125,7 @@ class GameWorld {
         this.creatureTemplateRepository = new CreatureTemplateRepository(
             this.db.creatureTemplates,
         );
+        this.actionRepository = new ActionRepository(this.db.actions);
 
         this.store = new Store({
             itemRepository: this.itemRepository,
@@ -120,10 +133,11 @@ class GameWorld {
             creatureRepository: this.creatureRepository,
             creatureTemplateRepository: this.creatureTemplateRepository,
             areaRepository: this.areaRepository,
+            actionRepository: this.actionRepository,
         });
     }
 
-    async getArea(areaId: string): Promise<Area> {
+    async getArea(areaId: string): Promise<Area | null> {
         return await this.store.getArea(areaId);
     }
 
@@ -150,7 +164,11 @@ class GameWorld {
     async getPlayer(): Promise<Creature> {
         // 假设玩家id都为#player
         const playerId = '#player';
-        return await this.getCreature(playerId);
+        const playerCreature = await this.getCreature(playerId);
+        if (!playerCreature) {
+            throw new Error('There is no player in store');
+        }
+        return playerCreature;
     }
 
     async getAction(actionId: string): Promise<Action> {
@@ -160,7 +178,7 @@ class GameWorld {
     async getItem(itemId: string): Promise<Item> {
         return await this.store.getItem(itemId);
     }
-    async getCreature(creatureId: string): Promise<Creature> {
+    async getCreature(creatureId: string): Promise<Creature | null> {
         return await this.store.getCreature(creatureId);
     }
 
@@ -366,6 +384,8 @@ class GameWorld {
             );
         });
         this.applyWorldUpdates(updates);
+        this.emitter.emit('creature-update', creature);
+        this.emitter.emit(`creature-update-${creature.id}`, creature);
     }
 
     triggerTimeUpdate(area: Area): void {
@@ -375,6 +395,12 @@ class GameWorld {
             updates.push(manager['onTimeUpdate'].call(area, this, area));
         });
         this.applyWorldUpdates(updates);
+        this.emitter.emit('time-update');
+    }
+
+    // 监听事件
+    public on(event: string, handler: (...args: Array<any>) => void): void {
+        this.emitter.on(event, handler);
     }
 }
 

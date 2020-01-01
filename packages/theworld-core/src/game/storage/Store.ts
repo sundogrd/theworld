@@ -11,6 +11,7 @@ import { Tile } from '../types/docs/AreaDoc';
 import CreatureTemplate, {
     CreatureTemplateCreateSource,
 } from '../types/CreatureTemplate';
+import ActionRepository from './ActionRepository';
 import Area from '../types/Area';
 import Action from '../types/Action';
 
@@ -20,18 +21,20 @@ type StoreOptions = {
     creatureRepository: CreatureRepository;
     creatureTemplateRepository: CreatureTemplateRepository;
     areaRepository: AreaRepository;
+    actionRepository: ActionRepository;
 };
 
-// only support function(), haven't supported arrow function yet
+// TODO: not using 'eval'
 export function parseFunction(functionStr: string): Function | null {
-    const funcReg = /function *\(([^()]*)\)[ \n\t]*{(.*)}/gim;
-    const match = funcReg.exec(functionStr.replace(/\n/g, ' '));
+    // only support function(), haven't supported arrow function yet
+    // const funcReg = /function *\(([^()]*)\)[ \n\t]*{(.*)}/gim;
+    // const match = funcReg.exec(functionStr.replace(/\n/g, ' '));
 
-    if (match) {
-        return new Function(...match[1].split(','), match[2]);
-    }
-
-    return null;
+    // if (match) {
+    //     return new Function(...match[1].split(','), match[2]);
+    // }
+    // return null;
+    return eval(functionStr);
 }
 
 /**
@@ -45,8 +48,10 @@ class Store {
     creatureRepository: CreatureRepository;
     creatureTemplateRepository: CreatureTemplateRepository;
     areaRepository: AreaRepository;
+    actionRepository: ActionRepository;
     constructor(storeOptions: StoreOptions) {
         this.itemRepository = storeOptions.itemRepository;
+        this.actionRepository = storeOptions.actionRepository;
         this.itemTemplateRepository = storeOptions.itemTemplateRepository;
         this.creatureRepository = storeOptions.creatureRepository;
         this.creatureTemplateRepository =
@@ -60,11 +65,27 @@ class Store {
         return itemDoc;
     }
 
-    // TODO
     async getAction(actionId: string): Promise<Action> {
-        // const itemDoc = await this.itemRepository.getItemById(itemId);
-        // return itemDoc;
-        return {} as Action;
+        const actionDoc = await this.actionRepository.getActionById(actionId);
+        return {
+            id: actionDoc.id,
+            name: actionDoc.name,
+            timeSpend: parseFunction(actionDoc.timeSpendScript) as (
+                world?: GameWorld,
+                me?: Creature,
+                target?: Item | Creature | Tile,
+            ) => number,
+            check: parseFunction(actionDoc.checkScript) as (
+                world: GameWorld,
+                me: Creature,
+                target?: Item | Creature | Tile,
+            ) => boolean,
+            do: parseFunction(actionDoc.doScript) as (
+                world: GameWorld,
+                me: Creature,
+                target?: Item | Creature | Tile,
+            ) => Array<GameWorldUpdate> | null,
+        } as Action;
     }
 
     async getItemTemplate(templateId: string): Promise<ItemTemplate> {
@@ -74,17 +95,20 @@ class Store {
         return {
             id: itemTemplateDoc.id,
             name: itemTemplateDoc.name,
-            create: new Function(itemTemplateDoc.createScript) as (
+            create: parseFunction(itemTemplateDoc.createScript) as (
                 world: GameWorld,
                 source: ItemTemplateCreateSource,
             ) => Item,
         };
     }
 
-    async getCreature(creatureId: string): Promise<Creature> {
+    async getCreature(creatureId: string): Promise<Creature | null> {
         const creatureDoc = await this.creatureRepository.getCreatureById(
             creatureId,
         );
+        if (!creatureDoc) {
+            return null;
+        }
 
         // 补全equipment
         const equipment: { [bodyPart: string]: Item | null } = {};
@@ -159,6 +183,7 @@ class Store {
         return {
             id: templateDoc.id,
             name: templateDoc.name,
+            race: templateDoc.race,
             create: parseFunction(templateDoc.createScript) as (
                 world: GameWorld,
                 source: CreatureTemplateCreateSource,
@@ -270,13 +295,16 @@ class Store {
         return results;
     }
 
-    async getArea(areaId: string): Promise<Area> {
+    async getArea(areaId: string): Promise<Area | null> {
         const areaDoc = await this.areaRepository.getAreaById(areaId);
+        if (areaDoc === null) {
+            return null;
+        }
         const areaCreatures = await this.creatureRepository.mgetCreatureByIds(
-            areaDoc.creatures,
+            Object.keys(areaDoc.creatures),
         );
         const areaItems = await this.itemRepository.mgetItemByIds(
-            areaDoc.items,
+            Object.keys(areaDoc.items),
         );
         return {
             id: areaDoc.id,

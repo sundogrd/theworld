@@ -1,18 +1,10 @@
 import { Creature } from './creature';
 import { Item } from './item';
 
-export enum EDirection {
-    WEST = 'west',
-    EAST = 'east',
-    NORTH = 'north',
-    SOUTH = 'south',
-}
-
 export type TilePosition = {
     areaId: string;
     x: number;
     y: number;
-    direction: EDirection;
 };
 
 export type Tile = {
@@ -20,7 +12,7 @@ export type Tile = {
     position: TilePosition;
     placeable: boolean;
     movable: boolean;
-    oriign: string;
+    origin: string | null;
     meta?: any;
 };
 

@@ -114,7 +114,7 @@ class World {
             filename: path.resolve(this.worldDir, './creatureTemplates.db'),
         });
 
-        this.gameWorld = new GameWorld(this.db);
+        this.gameWorld = new GameWorld(this.db, this.logger);
     }
 
     run(port?: number): void {

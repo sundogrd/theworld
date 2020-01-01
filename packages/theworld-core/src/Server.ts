@@ -1,6 +1,5 @@
 import * as WebSocket from 'ws';
 import * as EventEmitter from 'eventemitter3';
-import * as uuidv4 from 'uuid/v4';
 
 export enum EServerEvent {
     ON_PLAYER_ACTION = 'on-player-action',
