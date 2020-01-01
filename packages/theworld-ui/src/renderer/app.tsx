@@ -7,7 +7,7 @@ import { createStore } from './store/index';
 import { useLocalStore } from 'mobx-react';
 import { BrowserRouter } from 'react-router-dom';
 import renderRoutes from './routes/renderRoutes';
-
+import DevTool from './devtool';
 // import DevTools, {configureDevtool} from 'mobx-react-devtools';
 // configureDevtool({
 //     // Turn on logging changes button programmatically:
@@ -26,14 +26,12 @@ import renderRoutes from './routes/renderRoutes';
 const App = observer<any>(() => {
     const store = useLocalStore(createStore)
     return (
-        <div>
-            <Provider {...store}>
-                <BrowserRouter>
-                    {renderRoutes(routes)}
-                </BrowserRouter>
-            </Provider>
-            {/* <DevTools/> */}
-        </div>
+        <Provider {...store}>
+            <BrowserRouter>
+                {renderRoutes(routes)}
+            </BrowserRouter>
+            <DevTool />
+        </Provider>
     );
 })
 
