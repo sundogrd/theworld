@@ -1,15 +1,14 @@
 import * as React from 'react';
 import Nav from '../../components/Nav';
 import { observer } from 'mobx-react';
-import './index.less';
-import useStores from '../../hooks/useStores';
 import Area from './area/index';
-import Actions from './actions/index';
+import Actions from './Actions';
 import PlayerStateDisplay from './states/player';
 import TileStateDisplay from './states/tile';
 
+import './index.less';
+
 const GameView: React.FunctionComponent<{}> = observer(() => {
-    const { gameStore } = useStores();
     return (
         <div className="game-view">
             <Nav to="/bundle" />
@@ -20,12 +19,7 @@ const GameView: React.FunctionComponent<{}> = observer(() => {
                     <TileStateDisplay />
                 </div>
             </div>
-            <div className="action">
-                <div className="actions"></div>
-                <div className="move-ops">
-                    <Actions />
-                </div>
-            </div>
+            <Actions />
         </div>
     );
 });
