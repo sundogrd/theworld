@@ -15,6 +15,7 @@ import AttributeDoc from './game/types/docs/AttributeDoc';
 import ActionRegistry from './game/types/registry/ActionRegistry';
 import AreaRegistry from './game/types/registry/AreaRegistry';
 import ActionDoc from './game/types/docs/ActionDoc';
+import AreaDoc, { Tile } from './game/types/docs/AreaDoc';
 
 // Loader for load resource for game
 
@@ -123,8 +124,36 @@ class BundleLoader {
             }),
         );
     }
-    private loadArea(_areaRegistry: AreaRegistry): Promise<void> {
-        throw new Error('not implemented');
+    private loadArea(areaRegistry: AreaRegistry): Promise<void> {
+        return new Promise((resolve, reject) => {
+            // TODO: check validation of creatures and items
+            this.db.areas.insert(
+                {
+                    id: areaRegistry.id,
+                    name: areaRegistry.name,
+                    map: areaRegistry.map,
+                    creatures: areaRegistry.creatures,
+                    items: areaRegistry.items,
+                    areaManagers: areaRegistry.areaManagers.map(areaManager => {
+                        return {
+                            id: areaManager.id,
+                            onTimeUpdateScript: areaManager.onTimeUpdate.toString(),
+                            onCreatureLeaveScript: areaManager.onCreatureLeave.toString(),
+                            onCreatureDeadScript: areaManager.onCreatureDead.toString(),
+                            onIdleScript: areaManager.onIdle.toString(),
+                        };
+                    }),
+                    meta: areaRegistry.meta,
+                } as AreaDoc,
+                err => {
+                    if (err) {
+                        reject();
+                        return;
+                    }
+                    resolve();
+                },
+            );
+        });
     }
     private loadItem(itemRegistry: ItemRegistry): Promise<void> {
         return new Promise((resolve, reject) => {

@@ -27,16 +27,12 @@ class CreatureRepository {
         });
     }
 
-    getCreatureById(id: string): Promise<CreatureDoc> {
+    getCreatureById(id: string): Promise<CreatureDoc | null> {
         return new Promise((resolve, reject): void => {
             this.store.findOne({ id: id }, function(
                 err: Error,
-                doc: CreatureDoc,
+                doc: CreatureDoc | null,
             ) {
-                if (err || !doc) {
-                    reject(err || new Error('No creature exist'));
-                    return;
-                }
                 resolve(doc);
             });
         });

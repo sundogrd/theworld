@@ -6,13 +6,12 @@ export type Tile = {
         areaId: string;
         x: number;
         y: number;
-        direction: EDirection;
     };
     placeable: boolean;
     // TODO: using mask code for movable
     moveable: boolean; // whether creature can move through the tile
-    origin: string; // origin type if place by something, for restore if the thing remove.
-    meta: any;
+    origin: string | null; // origin type if place by something, for restore if the thing remove.
+    meta: Record<string, any>;
 };
 
 type AreaDoc = {

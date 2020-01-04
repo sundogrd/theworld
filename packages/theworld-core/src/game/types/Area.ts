@@ -4,7 +4,7 @@ import GameWorld, { GameWorldUpdate } from '../GameWorld';
 import CreatureDoc from './docs/CreatureDoc';
 import ItemDoc from './docs/ItemDoc';
 
-type AreaManager = {
+export type AreaManager = {
     id: string;
     // trigger only when player is in this area
     onTimeUpdate: (
