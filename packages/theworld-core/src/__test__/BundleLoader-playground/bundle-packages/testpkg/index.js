@@ -151,6 +151,10 @@ async function registerArea(loader) {
 
     await Promise.all(
         areaDirectories.map(async dir => {
+            // skip tiles directory
+            if (dir.name === "tiles") {
+                return Promise.resolve()
+            }
             await loader.loadArea(
                 require(path.resolve(
                     __dirname,

@@ -1,1 +1,1 @@
-{"id":"macbook-pro-template","name":"Macbook Pro Template","equipable":["right-hand","left-hand"],"createScript":"(world, source) => {\n        return null;\n    }","_id":"btVyLnQSbxdAxJQN"}
+{"id":"macbook-pro-template","name":"Macbook Pro Template","equipable":["right-hand","left-hand"],"createScript":"(world, source) => {\n        return null;\n    }","_id":"H0XmLUxIRTxmc93p"}

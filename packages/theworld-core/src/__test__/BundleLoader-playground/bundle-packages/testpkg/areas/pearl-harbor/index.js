@@ -1,6 +1,7 @@
 const soilGen = require('../tiles/templates/soil-generator');
 const water = require('../tiles/water')
 const rock = require('../tiles/rock')
+const sand = require('../tiles/sand')
 
 const defaultAreaManager = {
     id: 'default',
@@ -26,17 +27,16 @@ const defaultAreaManager = {
     },
 };
 
-// 阿德瑞斯，启始之地。象征火神的地方。
+// 珍珠港，另一个初始地图
 module.exports = {
-    id: 'adranus',
-    name: '${adranus}', // or you can just type 'Adranus', but it will not get benefit from i18n mechanism.
-    // eslint-disable-next-line prettier/prettier
+    id: 'pearl-harbor',
+    name: '${pearl-harbor}',
     map: [
-        [rock, soilGen(), soilGen(), soilGen()],
-        [soilGen(), rock, soilGen(), null],
-        [soilGen(), soilGen(), soilGen(), null],
-        [soilGen(), rock, soilGen(), water],
-        [soilGen(), soilGen(), soilGen(), water],
+        [water, water, soilGen(), soilGen()],
+        [water, water, soilGen(), sand],
+        [water, soilGen(), soilGen(), sand],
+        [water, sand, sand, water],
+        [water, sand, rock, sand],
     ],
     creatures: {},
     items: {},

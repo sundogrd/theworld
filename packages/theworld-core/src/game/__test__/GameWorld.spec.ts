@@ -108,7 +108,7 @@ describe('Test GameWorld', () => {
                 });
             }
             await gw.run();
-            await gameNext();
+            // await gameNext();
             assert.ok(1);
         });
     });

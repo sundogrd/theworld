@@ -1,5 +1,5 @@
 module.exports = {
-    type: 'soil',
+    type: 'sand',
     placeable: true,
     movable: true,
     origin: null,

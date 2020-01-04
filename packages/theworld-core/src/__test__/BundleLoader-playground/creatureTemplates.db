@@ -1,1 +1,1 @@
-{"id":"lwio-template","name":"Lwio Template","race":"human","createScript":"(world, source) => {\n        throw new Error('not implemnted');\n    }","_id":"hWvtD6iIaxWtRyuq"}
+{"id":"lwio-template","name":"Lwio Template","race":"human","createScript":"(world, source) => {\n        throw new Error('not implemnted');\n    }","_id":"Tuff8AAAC2p7vITo"}

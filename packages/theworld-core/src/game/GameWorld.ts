@@ -184,7 +184,7 @@ class GameWorld {
 
     async run(): Promise<void> {
         // 加载世界对象状态
-        // 时间开始流动 toki o wutokimasi
+        // 时间开始流动
         while (true) {
             await this.loopOnce();
         }
