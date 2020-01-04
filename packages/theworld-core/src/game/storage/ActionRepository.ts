@@ -2,9 +2,9 @@ import * as Datastore from 'nedb';
 import ActionDoc from '../types/docs/ActionDoc';
 
 /**
- * 用于操作area数据库
+ * 用于操作Action数据库
  *
- * @class AreaRepository
+ * @class ActionRepository
  */
 class ActionRepository {
     store: Datastore;
