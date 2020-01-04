@@ -14,18 +14,6 @@
   "jest.pathToConfig": "./jest.config.js",
   "jest.pathToJest": "./node_modules/.bin/jest",
   "eslint.enable": true,
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    {
-      "language": "typescript",
-      "autoFix": true
-    },
-    {
-      "language": "typescriptreact",
-      "autoFix": true
-    }
-  ],
   "css.validate": false,
   "less.validate": false,
   "scss.validate": false,
