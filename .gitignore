@@ -7,3 +7,5 @@ dist/
 !.vscode/settings.json
 !.vscode/extensions.json
 !.vscode/launch.json
+
+yarn-error.log
