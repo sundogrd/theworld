@@ -12,7 +12,7 @@ const CSI_KEYS = {
     ARROW_RIGHT: 'C',
 };
 
-enum TerminalLevel {
+export enum TerminalLevel {
     SUCCESS = 'success',
     FAILED = 'FAILED',
     WARNING = 'WARNING',
@@ -20,29 +20,34 @@ enum TerminalLevel {
     START = 'START',
 }
 
+const SHORT_CUT_CODE = 192;
+
 interface CursorSegment {
     before: string;
     after: string;
 }
 
 export interface Handler {
-    (msg: string): any;
+    (msg: string, printer?: (msg: string, level: TerminalLevel) => void): any;
 }
 
 export default class TerminalDisplayer {
+    private _hasInput = false;
     private _input = '';
     private _cursor = 0;
     public term: Terminal;
     private startTag = '~$ ';
+    private _enterHandlers: Array<Handler> = [];
+    private _dom: HTMLElement;
     constructor() {
         this.initTerm();
         this.bindEvent();
     }
 
     mount(target: string) {
-        const dom = document.querySelector(target);
-        if (dom) {
-            this.term.open(dom as HTMLElement);
+        this._dom = document.querySelector(target);
+        if (this._dom) {
+            this.term.open(this._dom as HTMLElement);
         }
     }
 
@@ -58,10 +63,16 @@ export default class TerminalDisplayer {
     }
 
     printLine() {
+        if (this._hasInput) {
+            this.term.write('\n');
+        }
         this.print(this.startTag, TerminalLevel.START);
     }
 
     print(msg: string, level: TerminalLevel = TerminalLevel.INFO) {
+        if (!msg) {
+            return;
+        }
         switch (level) {
             case TerminalLevel.FAILED:
                 this._printError(msg);
@@ -110,9 +121,19 @@ export default class TerminalDisplayer {
 
     bindEvent(): void {
         this.term.onData(this.handleInputData.bind(this));
+        // 一些键盘快捷事件
+        window.addEventListener('keyup', e => {
+            const code = e.keyCode || e.which;
+            switch (code) {
+                case SHORT_CUT_CODE:
+                    this._dom && (this._dom.hidden = !this._dom.hidden);
+                    break;
+            }
+        });
     }
 
     handleInputData(msg: string): void {
+        !this._hasInput && (this._hasInput = true);
         const code = msg.charCodeAt(0);
         if (code === 27) {
             switch (msg) {
@@ -140,13 +161,11 @@ export default class TerminalDisplayer {
         } else if (code < 32 || code === 127) {
             switch (msg) {
                 case '\r': {
-                    this.term.write(`\r\nYou typed: '${this._input}'\r\n`);
-                    this.term.write('$ ');
-                    this._input = '';
+                    this.fireEnter();
                     break;
                 }
                 case '\x7F': {
-                    this.deleteInput();
+                    this._cursor > 0 && this.deleteInput();
                     break;
                 }
                 case '\t': {
@@ -166,7 +185,12 @@ export default class TerminalDisplayer {
         };
     }
 
-    deleteInput(): void {
+    private _printState() {
+        console.log('input is ', this._input);
+        console.log('cursor is ', this._cursor);
+    }
+
+    private deleteInput(): void {
         this.term.write('\b \b');
         const { before, after } = this.getCursorSegment();
         this._input = before.substr(0, before.length - 1) + after;
@@ -176,11 +200,10 @@ export default class TerminalDisplayer {
         this.term.write(' ');
         this._goBack(after.length + 1);
         this._cursor -= 1;
-        console.log('input is ', this._input);
-        console.log('cursor is ', this._cursor);
+        // this._printState();
     }
 
-    addInput(msg: string): void {
+    private addInput(msg: string): void {
         const { before: beforeStr, after: afterStr } = this.getCursorSegment();
         this._input = beforeStr + msg + afterStr;
         // 保证视图和数据一致, 需要重写后面部分
@@ -191,11 +214,22 @@ export default class TerminalDisplayer {
         // 复原光标
         afterStr.length && this._goBack(afterStr.length);
         this._cursor += 1;
-        console.log('input is ', this._input);
-        console.log('cursor is ', this._cursor);
+        // this._printState();
+    }
+
+    private fireEnter() {
+        this.printLine();
+        if (this._input) {
+            this._enterHandlers.forEach(handler => {
+                handler.call(this, this._input, this.print.bind(this));
+                this.printLine();
+            });
+            this._input = '';
+            this._cursor = 0;
+        }
     }
 
     onEnter(cb: Handler) {
-        cb(this._input);
+        this._enterHandlers.push(cb);
     }
 }

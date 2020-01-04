@@ -18,5 +18,6 @@
       "packages/theworld-ui",
       "packages/fantasy-base-bundle"
     ]
-  }
+  },
+  "dependencies": {}
 }

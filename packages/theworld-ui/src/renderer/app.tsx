@@ -1,6 +1,7 @@
 import { hot } from 'react-hot-loader/root';
 import * as React from 'react';
 import routes from './routes';
+import { set } from 'lodash-es';
 import './style/app.less';
 import { Provider, observer } from 'mobx-react';
 import { createStore } from './store/index';
@@ -8,31 +9,25 @@ import { useLocalStore } from 'mobx-react';
 import { BrowserRouter } from 'react-router-dom';
 import renderRoutes from './routes/renderRoutes';
 import DevTool from './devtool';
-// import DevTools, {configureDevtool} from 'mobx-react-devtools';
-// configureDevtool({
-//     // Turn on logging changes button programmatically:
-//     logEnabled: true,
-//     // Turn off displaying components updates button programmatically:
-//     updatesEnabled: true,
-//     // Log only changes of type `reaction`
-//     // (only affects top-level messages in console, not inside groups)
-//     logFilter: change => true,
-// });
-// import {configure} from 'mobx';
-// configure({enforceActions: 'observed'});
-// configure({enforceActions: 'always'}); // 开启严格模式 只有通过action才可以更改数据
-// eslint-disable
+// 引入websocket 客户端
+import WsClient from './client';
+const client = new WsClient('ws://localhost:8880');
 
 const App = observer<any>(() => {
-    const store = useLocalStore(createStore)
+    const store = useLocalStore(createStore);
+    client.onMessage(function connection(data) {
+        const curStore = (store.gameStore as any)[data.type];
+        const payload = data.payload;
+        for (const [k, v] of Object.entries(payload)) {
+            set(curStore, k, v);
+        }
+    });
     return (
         <Provider {...store}>
-            <BrowserRouter>
-                {renderRoutes(routes)}
-            </BrowserRouter>
+            <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
             <DevTool />
         </Provider>
     );
-})
+});
 
-export default hot(App)
+export default hot(App);
