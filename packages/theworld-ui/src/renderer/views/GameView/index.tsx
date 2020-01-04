@@ -5,8 +5,8 @@ import './index.less';
 import useStores from '../../hooks/useStores';
 import Area from './area/index';
 import Actions from './actions/index';
-import PlayerStateDisplayer from './states/player';
-import TileStateDisplayer from './states/tile';
+import PlayerStateDisplay from './states/player';
+import TileStateDisplay from './states/tile';
 
 const GameView: React.FunctionComponent<{}> = observer(() => {
     const { gameStore } = useStores();
@@ -16,8 +16,8 @@ const GameView: React.FunctionComponent<{}> = observer(() => {
             <div className="non-action">
                 <Area />
                 <div className="states-wrapper">
-                    <PlayerStateDisplayer />
-                    <TileStateDisplayer />
+                    <PlayerStateDisplay />
+                    <TileStateDisplay />
                 </div>
             </div>
             <div className="action">

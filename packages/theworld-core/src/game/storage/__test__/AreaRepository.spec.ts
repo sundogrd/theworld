@@ -4,86 +4,86 @@ import * as path from 'path';
 import { EDirection, ECreatureGender } from '../../types/common';
 
 describe('Basic Attribute', () => {
-let areaRepository: AreaRepository | null = null;
-const db = new Datastore({
-    filename: path.resolve('./packages/theworld-core/test/simple-area.db'),
-    autoload: true,
-});
-beforeEach(() => {
-    areaRepository = new AreaRepository(db);
-});
+    let areaRepository: AreaRepository | null = null;
+    const db = new Datastore({
+        filename: path.resolve('./packages/theworld-core/test/simple-area.db'),
+        autoload: true,
+    });
+    beforeEach(() => {
+        areaRepository = new AreaRepository(db);
+    });
 
-describe('#init db', () => {
-    it('should update base value', () => {
-        console.log(db);
-        areaRepository.addArea({
-            id: 'new_start',
-            name: '起始之地',
-            areaManagers: [],
-            meta: {},
-            map: [
-                [
-                    {
-                        type: 'rock',
-                        position: {
-                            areaId: 'new_start',
-                            x: 0,
-                            y: 0,
-                            direction: EDirection.NORTH,
+    describe('#init db', () => {
+        it('should update base value', () => {
+            console.log(db);
+            areaRepository.addArea({
+                id: 'new_start',
+                name: '起始之地',
+                areaManagers: [],
+                meta: {},
+                map: [
+                    [
+                        {
+                            type: 'rock',
+                            position: {
+                                areaId: 'new_start',
+                                x: 0,
+                                y: 0,
+                                direction: EDirection.NORTH,
+                            },
+                            placeable: false,
+                            moveable: true,
+                            origin: 'rock',
+                            meta: null,
                         },
-                        placeable: false,
-                        moveable: true,
-                        origin: 'rock',
-                        meta: null,
-                    },
-                    {
-                        type: 'water',
-                        position: {
-                            areaId: 'new_start',
-                            x: 1,
-                            y: 0,
-                            direction: EDirection.NORTH,
+                        {
+                            type: 'water',
+                            position: {
+                                areaId: 'new_start',
+                                x: 1,
+                                y: 0,
+                                direction: EDirection.NORTH,
+                            },
+                            placeable: false,
+                            moveable: true,
+                            origin: 'rock',
+                            meta: null,
                         },
-                        placeable: false,
-                        moveable: true,
-                        origin: 'rock',
-                        meta: null,
-                    },
+                    ],
+                    [
+                        {
+                            type: 'rock',
+                            position: {
+                                areaId: 'new_start',
+                                x: 0,
+                                y: 1,
+                                direction: EDirection.NORTH,
+                            },
+                            placeable: false,
+                            moveable: true,
+                            origin: 'rock',
+                            meta: null,
+                        },
+                        {
+                            type: 'rock',
+                            position: {
+                                areaId: 'new_start',
+                                x: 1,
+                                y: 1,
+                                direction: EDirection.NORTH,
+                            },
+                            placeable: false,
+                            moveable: true,
+                            origin: 'rock',
+                            meta: null,
+                        },
+                    ],
                 ],
-                [
-                    {
-                        type: 'rock',
-                        position: {
-                            areaId: 'new_start',
-                            x: 0,
-                            y: 1,
-                            direction: EDirection.NORTH,
-                        },
-                        placeable: false,
-                        moveable: true,
-                        origin: 'rock',
-                        meta: null,
-                    },
-                    {
-                        type: 'rock',
-                        position: {
-                            areaId: 'new_start',
-                            x: 1,
-                            y: 1,
-                            direction: EDirection.NORTH,
-                        },
-                        placeable: false,
-                        moveable: true,
-                        origin: 'rock',
-                        meta: null,
-                    },
-                ],
-            ],
-            creatures: ['musiman'],
-            items: [],
+                creatures: ['musiman'],
+                items: [],
+            });
         });
     });
-});
 });
 
 // id: 'musiman',

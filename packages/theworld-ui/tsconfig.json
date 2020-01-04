@@ -4,8 +4,10 @@
     "noImplicitAny": true,
     "sourceMap": true,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "rootDirs": ["src", "stories"],
     "jsx": "react",
     "paths": {
       "*": ["node_modules/*"],
@@ -13,5 +15,6 @@
     },
     "types": ["node", "electron", "webpack-env"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules/**/*", "../../node_modules/**/*"],
 }

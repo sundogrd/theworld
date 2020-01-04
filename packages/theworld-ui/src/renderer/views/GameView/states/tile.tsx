@@ -2,15 +2,20 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 // import './index.less';
 import useStores from '../../../hooks/useStores';
-import { Creature } from '@/types/creature';
-import { Area, Tile } from '@/types/area';
+import { Tile } from '@/types/area';
 
-function getPlayerTile(player: Creature, area: Area): Tile {
+function getPlayerTile(
+    player: {
+        position: {x: number; y: number};
+    },
+    area: {
+        map: Array<Array<Tile>>;
+    }): Tile {
     const { x, y } = player.position;
     return area.map[y][x];
 }
 
-const TileStateDisplayer = observer(() => {
+const TileStateDisplay = observer(() => {
     const { gameStore } = useStores();
     const { player, area } = gameStore;
     const tile = getPlayerTile(player, area);
@@ -22,4 +27,4 @@ const TileStateDisplayer = observer(() => {
     );
 });
 
-export default TileStateDisplayer;
+export default TileStateDisplay;

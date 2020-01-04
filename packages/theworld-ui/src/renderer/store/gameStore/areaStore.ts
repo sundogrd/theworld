@@ -13,7 +13,7 @@ const areaStore = () => ({
                 },
                 placeable: false,
                 movable: true,
-                oriign: 'rock',
+                origin: 'rock',
             },
             {
                 type: 'water',
@@ -25,7 +25,7 @@ const areaStore = () => ({
                 },
                 placeable: false,
                 movable: true,
-                oriign: 'rock',
+                origin: 'rock',
             },
         ],
         [
@@ -39,7 +39,7 @@ const areaStore = () => ({
                 },
                 placeable: false,
                 movable: true,
-                oriign: 'rock',
+                origin: 'rock',
             },
             {
                 type: 'rock',
@@ -51,7 +51,7 @@ const areaStore = () => ({
                 },
                 placeable: false,
                 movable: true,
-                oriign: 'rock',
+                origin: 'rock',
             },
         ],
     ],
