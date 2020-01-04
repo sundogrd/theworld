@@ -1,4 +1,4 @@
-import { EDirection } from '../../../types/area';
+import { EDirection } from '../../../types/common';
 
 const playerStore = () => ({
     id: '#player',
@@ -21,10 +21,10 @@ const playerStore = () => ({
         HP: 10,
         POWER: 3,
         DEF: 2,
-    },
+    } as Record<string, number>,
     isAlive: true,
     // 以左上角建立坐标系
-    move(direction: EDirection) {
+    move(direction: EDirection): void {
         switch (direction) {
             case EDirection.SOUTH: {
                 const { x, y } = this.position;

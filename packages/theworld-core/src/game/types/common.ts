@@ -10,12 +10,11 @@ export enum ECreatureGender {
     MALE = 'male',
 }
 
-
 export type QueryType = {
     is: {
-        [key: string]: any
-    },
+        [key: string]: any;
+    };
     not: {
-        [key: string]: any
-    }
-}
+        [key: string]: any;
+    };
+};

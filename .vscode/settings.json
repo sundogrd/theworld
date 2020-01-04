@@ -33,5 +33,9 @@
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
     "**/node_modules/*/**": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": true,
+    "source.fixAll.eslint": true
   }
 }

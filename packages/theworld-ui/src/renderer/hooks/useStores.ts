@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { MobXProviderContext } from 'mobx-react'
-function useStores(): any {
+import { TStore } from '../store'
+function useStores(): TStore {
     return React.useContext(MobXProviderContext)
 }
 

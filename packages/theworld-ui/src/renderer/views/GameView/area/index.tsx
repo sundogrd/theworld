@@ -22,15 +22,22 @@ const Area = observer(() => {
 
     return (
         <div className="area">
-            {map.map((row: Tile[], idx: number) => {
-                return row.map((col: Tile, i: number) => {
+            {map.map((row: Tile[], y: number) => {
+                return row.map((col: Tile, x: number) => {
+                    if (player.position.x === x && player.position.y === y) {
+                        return (
+                            <CTile
+                                tile={col}
+                                player={true}
+                                key={`${y}-${x}`}
+                            />
+                        )
+                    }
                     return (
                         <CTile
                             tile={col}
-                            player={
-                                isCreatureInTile(player, col) ? player : null
-                            }
-                            key={`${idx}-${i}`}
+                            player={null}
+                            key={`${y}-${x}`}
                         />
                     );
                 });

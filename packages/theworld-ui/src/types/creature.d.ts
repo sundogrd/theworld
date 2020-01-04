@@ -1,5 +1,5 @@
 import { Item } from './item';
-import { EDirection, TilePosition, Tile } from './area';
+import { TilePosition, Tile } from './area';
 
 export enum ECreatureGender {
     FEMALE = 'female',
