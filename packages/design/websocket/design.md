@@ -44,10 +44,8 @@ UI操作，用户指令
 {
   type: "updateWorld",
   payload: {
-    update: {
-      type: "",
-      payload: {},
-    }
+    type: "move",
+    worldUpdates: Array<WorldUpdate>,
   }
   <!-- type: "interrupt",
   payload: {
